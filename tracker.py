@@ -20,26 +20,27 @@ class GarminDisplay(DisplayPage):
         self.bgfont  = ImageFont.load(r'fonts/6x10.pil')
         self.icon = None
 
-
     def display(self):
-        self.icon = Image.new("RGB", (128,64))
-        draw = ImageDraw.Draw(self.icon)
-        if self.values is not None:
-            self.udateTime = arrow.get(self.values['values']['Time'],'M/D/YYYY h:mm:ss A').shift(minutes=+10)
-            lines = []
-            lines.append('{:>18}'.format(self.shortentime(self.values['values']['Time'])))
-            lines.append(" {}'s location -".format(self.values['values']['Name'].split()[0]))
-            lines.append('   Lat: {}'.format(self.humanlat(self.values['values']['Latitude'])))
-            lines.append('   Lon: {}'.format(self.humanlon(self.values['values']['Longitude'])))
-            lines.append('   {:>3} @ {:>5.2f} kts'.format(self.values['values']['Course'], self.values['values']['Velocity']))
-            
-            for i in range(len(lines)):
-                # print(lines[i])
-                draw.text((1,5+ i*11), lines[i], font = self.bgfont)
-        if self.is_paused:
-            draw.line(((125,0),(125,2)), fill='White', width=1)
-            draw.line(((127,0),(127,2)), fill='White', width=1)
-        self.icon.save("static/thumb.bmp", "BMP")
+        if self.data_dirty:
+            self.icon = Image.new("RGB", (128,64))
+            draw = ImageDraw.Draw(self.icon)
+            if self.values is not None:
+                self.udateTime = arrow.get(self.values['values']['Time'],'M/D/YYYY h:mm:ss A').shift(minutes=+10)
+                lines = []
+                lines.append('{:>18}'.format(self.shortentime(self.values['values']['Time'])))
+                lines.append(" {}'s location -".format(self.values['values']['Name'].split()[0]))
+                lines.append('   Lat: {}'.format(self.humanlat(self.values['values']['Latitude'])))
+                lines.append('   Lon: {}'.format(self.humanlon(self.values['values']['Longitude'])))
+                lines.append('   {:>3} @ {:>5.2f} kts'.format(self.values['values']['Course'], self.values['values']['Velocity']))
+                
+                for i in range(len(lines)):
+                    # print(lines[i])
+                    draw.text((1,5+ i*11), lines[i], font = self.bgfont)
+            if self.is_paused:
+                draw.line(((125,0),(125,2)), fill='White', width=1)
+                draw.line(((127,0),(127,2)), fill='White', width=1)
+            self.icon.save("static/garmin.bmp", "BMP")
+            self.data_dirty = False
         if self.matrix:
             self.my_canvas.Clear()
             self.my_canvas.SetImage(self.icon,0,0)

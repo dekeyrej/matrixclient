@@ -85,6 +85,7 @@ class MLBDisplay(DisplayPage):
 #         tstart = time.monotonic()
         self.values = self.dba.read(self.type)
         if self.values is not None:
+            self.data_dirty = True
             self.nextUpdate = arrow.get(self.fix_edt(self.values['valid']),'MM/DD/YYYY h:mm:ss A ZZZ').shift(seconds=+1)
         t = arrow.now()
         if t.hour >= 11:
@@ -327,28 +328,30 @@ class MLBDisplay(DisplayPage):
         
         
     def display(self):
-        self.icon = Image.new("RGB", (128,64))
-        draw = ImageDraw.Draw(self.icon)
-        if self.cycle and self.currentGame != -1:
-            self.currentGame = (self.currentGame + 1) % self.gameCount
-        else:
-            self.currentGame = self.TEAM_GAME
-#         print(self.currentGame)
-        if self.gameCount != 0:
-            self.loadGame(self.currentGame)
-        self.display_stuff(top=True)
-        # self.my_canvas.Clear()
-        if self.ind == 'in':
-            self.DrawInProgressGame(draw)
-        else:
-            for i in range(3):
-                draw.text((2, 11 * i), self.lines[i], font = self.bgfont, fill=self.textColor)
-#                 graphics.DrawText(self.my_canvas, self.bgfont, 2, 11 * i + 8,  self.textColor, self.lines[i])
-        if self.is_paused:
-            draw.line(((125,0),(125,2)), fill='White', width=1)
-            draw.line(((127,0),(127,2)), fill='White', width=1)
-        self.icon.save("static/thumb.bmp", "BMP")
-        self.dirty = True
+        if self.data_dirty:
+            self.icon = Image.new("RGB", (128,64))
+            draw = ImageDraw.Draw(self.icon)
+            if self.cycle and self.currentGame != -1:
+                self.currentGame = (self.currentGame + 1) % self.gameCount
+            else:
+                self.currentGame = self.TEAM_GAME
+    #         print(self.currentGame)
+            if self.gameCount != 0:
+                self.loadGame(self.currentGame)
+            self.display_stuff(top=True)
+            # self.my_canvas.Clear()
+            if self.ind == 'in':
+                self.DrawInProgressGame(draw)
+            else:
+                for i in range(3):
+                    draw.text((2, 11 * i), self.lines[i], font = self.bgfont, fill=self.textColor)
+    #                 graphics.DrawText(self.my_canvas, self.bgfont, 2, 11 * i + 8,  self.textColor, self.lines[i])
+            if self.is_paused:
+                draw.line(((125,0),(125,2)), fill='White', width=1)
+                draw.line(((127,0),(127,2)), fill='White', width=1)
+            self.icon.save("static/mlb.bmp", "BMP")
+            self.dirty = True
+            self.data_dirty = False
         if self.matrix:
             self.my_canvas.Clear()
             self.my_canvas.SetImage(self.icon,0,0)

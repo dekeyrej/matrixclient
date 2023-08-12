@@ -7,7 +7,7 @@ StartLimitBurst=5
 StartLimitInterval=200
 
 [Service]
-ExecStart=/home/pi/kubematrix/client/mc.sh
+ExecStart=/home/pi/matrixclient/mc.sh
 Restart=always
 RestartSec=30
 

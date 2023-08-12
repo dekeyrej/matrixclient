@@ -125,10 +125,10 @@ class Matrix(object):
         parser.add_argument("--led-show-refresh", action="store_true", help="Shows the current refresh rate of the LED panel")
         parser.add_argument("--led-slowdown-gpio", action="store", help="Slow down writing to GPIO. Range: 0..4. Default: 4", default=4, type=int) # 2 works pretty well for a pi3A+, 4 for a pi4b
         parser.add_argument("--led-no-hardware-pulse", action="store", help="Don't use hardware pin-pulse generation")
-        # parser.add_argument("--led-rgb-sequence", action="store", help="Switch if your matrix has led colors swapped. Default: RGB", default="RGB", type=str)
-        # parser.add_argument("-p", "--led-pwm-bits", action="store", help="Bits used for PWM. Something between 1..11. Default: 11", default=11, type=int)
-        # parser.add_argument("--led-scan-mode", action="store", help="Progressive or interlaced scan. 0 Progressive, 1 Interlaced (default)", default=1, choices=range(2), type=int)
-        # parser.add_argument("--led-pwm-lsb-nanoseconds", action="store", help="Base time-unit for the on-time in the lowest significant bit in nanoseconds. Default: 130", default=130, type=int)
+        parser.add_argument("--led-rgb-sequence", action="store", help="Switch if your matrix has led colors swapped. Default: RGB", default="RGB", type=str)
+        parser.add_argument("-p", "--led-pwm-bits", action="store", help="Bits used for PWM. Something between 1..11. Default: 11", default=11, type=int)
+        parser.add_argument("--led-pwm-lsb-nanoseconds", action="store", help="Base time-unit for the on-time in the lowest significant bit in nanoseconds. Default: 130", default=130, type=int)
+        parser.add_argument("--led-scan-mode", action="store", help="Progressive or interlaced scan. 0 Progressive, 1 Interlaced (default)", default=1, choices=range(2), type=int)        
         # mlb arguments
         parser.add_argument("-t", action="store", help="2/3 letter abbreviation for the MLB team to display. BOS, TB, NYY. Befault: BOS", default="BOS", type=str)
         parser.add_argument("--enable-cycle", action="store_true", help="Enable cycling through all daily games when selected team's game is not in progress")
@@ -154,7 +154,11 @@ class Matrix(object):
         if clargs.led_no_hardware_pulse:
             options.disable_hardware_pulsing = True
     #         options.disable_hardware_pulsing = True   # force = True for running inside Thonny (don't have to run as root)
-        
+        options.led_rgb_sequence = clargs.led_rgb_sequence
+        options.pwm_bits = clargs.led_pwm_bits
+        options.pwm_lsb_nanoseconds = clargs.led_pwm_lsb_nanoseconds
+        options.scan_mode = clargs.led_scan_mode
+
         return RGBMatrix(options = options)
     
     def buildDisplays(self):

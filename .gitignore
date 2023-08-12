@@ -3,3 +3,5 @@ venv/
 Do_Not_Copy/refKey.txt
 img/display.bmp
 static/thumb.bmp
+static/event.bmp
+static/wifi.bmp

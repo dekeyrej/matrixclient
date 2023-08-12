@@ -27,28 +27,29 @@ class Clock(DisplayPage):
         self.nextUpdate = arrow.now().shift(hours=+1)
         
     def display(self):
-        self.icon = Image.new("RGB", (128,64))
-        draw = ImageDraw.Draw(self.icon)
-        
-        t = arrow.now()
-#         print(t.format("ZZ"))
-        dateString = t.format("ddd D MMM").upper()
-        if self.seconds:
-            clockString = t.format("hh:mm:ss")
-        else:
-            clockString = t.format("hh:mm")
-        ampm        = t.format("a")
-        length = draw.textlength(clockString, font = self.clockFont)
-        aplen = draw.textlength(ampm, font = self.ampmFont)
-        cloff = (128 - (length + 3 + aplen))/2
-        draw.text((cloff,1), clockString, fill = 'white', font = self.clockFont)
-        draw.text((cloff+length+3,3), ampm, fill = 'white', font = self.ampmFont)
-        offset = (128 - draw.textlength(dateString, font = self.dateFont))/2
-        draw.text((offset,33), dateString, fill = 'white', font = self.dateFont)
-        if self.is_paused:
-            draw.line(((125,0),(125,2)), fill='White', width=1)
-            draw.line(((127,0),(127,2)), fill='White', width=1)
-        self.icon.save("static/thumb.bmp", "BMP")
+        if self.data_dirty:
+            self.icon = Image.new("RGB", (128,64))
+            draw = ImageDraw.Draw(self.icon)
+            
+            t = arrow.now()
+    #         print(t.format("ZZ"))
+            dateString = t.format("ddd D MMM").upper()
+            if self.seconds:
+                clockString = t.format("hh:mm:ss")
+            else:
+                clockString = t.format("hh:mm")
+            ampm        = t.format("a")
+            length = draw.textlength(clockString, font = self.clockFont)
+            aplen = draw.textlength(ampm, font = self.ampmFont)
+            cloff = (128 - (length + 3 + aplen))/2
+            draw.text((cloff,1), clockString, fill = 'white', font = self.clockFont)
+            draw.text((cloff+length+3,3), ampm, fill = 'white', font = self.ampmFont)
+            offset = (128 - draw.textlength(dateString, font = self.dateFont))/2
+            draw.text((offset,33), dateString, fill = 'white', font = self.dateFont)
+            if self.is_paused:
+                draw.line(((125,0),(125,2)), fill='White', width=1)
+                draw.line(((127,0),(127,2)), fill='White', width=1)
+            self.icon.save("static/clock.bmp", "BMP")
         if self.matrix:
             self.my_canvas.Clear()
             self.my_canvas.SetImage(self.icon,0,0)

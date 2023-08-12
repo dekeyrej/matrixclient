@@ -89,7 +89,7 @@ class Uptime(DisplayPage):
         if self.is_paused:
             draw.line(((125,0),(125,2)), fill='White', width=1)
             draw.line(((127,0),(127,2)), fill='White', width=1)
-        self.icon.save("static/thumb.bmp", "BMP")
+        self.icon.save("static/uptime.bmp", "BMP")
         self.dirty = True
         if self.matrix:
             self.my_canvas.Clear()

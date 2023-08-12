@@ -24,13 +24,14 @@ class WiFi(DisplayPage):
         self.nextUpdate = arrow.now().shift(hours=+1)
         
     def display(self):
-        self.icon = Image.new("RGB", (128,64))
-        self.icon.paste(self.qrcode, box=(0,0))
-        if self.is_paused:
-            draw = ImageDraw.Draw(self.icon)
-            draw.line(((125,0),(125,2)), fill='White', width=1)
-            draw.line(((127,0),(127,2)), fill='White', width=1)
-        self.icon.save("static/thumb.bmp", "BMP")
+        if self.data_dirty:
+            self.icon = Image.new("RGB", (128,64))
+            self.icon.paste(self.qrcode, box=(0,0))
+            if self.is_paused:
+                draw = ImageDraw.Draw(self.icon)
+                draw.line(((125,0),(125,2)), fill='White', width=1)
+                draw.line(((127,0),(127,2)), fill='White', width=1)
+            self.icon.save("static/wifi.bmp", "BMP")
         if self.matrix:
             self.my_canvas.Clear()
             self.my_canvas.SetImage(self.icon,0,0)
