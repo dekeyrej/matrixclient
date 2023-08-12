@@ -89,7 +89,10 @@ class Matrix(object):
     def playPause(self):
         # acion to take on redis-delivered command 'pp'
         self.running = not self.running
-        self.displays[self.display][0].data_dirty = True
+        self.displays[self.display][0].display().data_dirty = True
+        offscreen_canvas = self.displays[self.display][0].display()
+        if self.matrix is not None:
+            offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
         self.displays[self.display][0].is_paused = not self.running
 
     def reload_displays(self):
@@ -197,27 +200,27 @@ class Matrix(object):
     def run(self):
         db = self.dba
         args = self.parseCL()
-        matrix = None
+        self.matrix = None
         if args.init_rgb > 0:
-            matrix = self.initMatrix(args)
-            offscreen_canvas = matrix.CreateFrameCanvas()
+            self.matrix = self.initMatrix(args)
+            offscreen_canvas = self.matrix.CreateFrameCanvas()
 
         ## Instantiate display classes and add them the event_type dictionary
         # from <source> import <Classname>
-        # self.modules['<Config Name>'] = <Classname>(db, matrix)
-        self.modules['Clock'] = Clock(db, matrix, seconds=True)
-        self.modules['Weekly Calendar'] = CalendarEvent(db, matrix)
-        self.modules['Next Family Event'] = NextEvent(db, matrix)
-        self.modules['Current Weather'] = CurrentWeather(db, matrix)
-        self.modules['Hourly Weather'] = HourlyWeather(db, matrix)
-        self.modules['Forecast Weather'] = ForecastWeather(db, matrix)
-        self.modules['Moon Display'] = MoonDisplay(db, matrix)
-        self.modules['MLB'] = MLBDisplay(db, matrix, team='BOS')
-        self.modules['Track'] = GarminDisplay(db, matrix)
-        self.modules['Uptime'] = Uptime(db, matrix)
-        self.modules['WiFi'] = WiFi(db, matrix)
-        # self.modules['NFL'] = NFLDisplay(db, matrix)
-        # self.modules['WC'] = WorldCupDisplay(db, matrix)
+        # self.modules['<Config Name>'] = <Classname>(db, self.matrix)
+        self.modules['Clock'] = Clock(db, self.matrix, seconds=True)
+        self.modules['Weekly Calendar'] = CalendarEvent(db, self.matrix)
+        self.modules['Next Family Event'] = NextEvent(db, self.matrix)
+        self.modules['Current Weather'] = CurrentWeather(db, self.matrix)
+        self.modules['Hourly Weather'] = HourlyWeather(db, self.matrix)
+        self.modules['Forecast Weather'] = ForecastWeather(db, self.matrix)
+        self.modules['Moon Display'] = MoonDisplay(db, self.matrix)
+        self.modules['MLB'] = MLBDisplay(db, self.matrix, team='BOS')
+        self.modules['Track'] = GarminDisplay(db, self.matrix)
+        self.modules['Uptime'] = Uptime(db, self.matrix)
+        self.modules['WiFi'] = WiFi(db, self.matrix)
+        # self.modules['NFL'] = NFLDisplay(db, self.matrix)
+        # self.modules['WC'] = WorldCupDisplay(db, self.matrix)
         ## end display classes
         
         self.loadConfig()
@@ -248,20 +251,15 @@ class Matrix(object):
                 frame = 0
                 lastds = lastfs = now
                 offscreen_canvas = self.displays[self.display][0].display()
-                self.displays[self.display][0].data_dirty = False
-                if matrix is not None:
-                    offscreen_canvas = matrix.SwapOnVSync(offscreen_canvas)
+                if self.matrix is not None:
+                    offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
         #         print("Display: {}, Frame {} of {}".format(type(displays[display][0]).__name__,frame+1,framect))
             elif lastfs == 0 or now - lastfs > fsint or self.displays[self.display][0].data_dirty:
                 frame = (frame + 1) % framect
                 lastfs = now
                 offscreen_canvas = self.displays[self.display][0].display()
-                self.displays[self.display][0].data_dirty = False
-                if matrix is not None:
-                    offscreen_canvas = matrix.SwapOnVSync(offscreen_canvas)
-            # offscreen_canvas = self.displays[self.display][0].display()
-            # if matrix is not None:
-            #     offscreen_canvas = matrix.SwapOnVSync(offscreen_canvas)
+                if self.matrix is not None:
+                    offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
             time.sleep(0.1)
 
 m = Matrix()
