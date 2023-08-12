@@ -90,6 +90,7 @@ class Matrix(object):
     def playPause(self):
         # acion to take on redis-delivered command 'pp'
         self.running = not self.running
+        self.displays[self.display][0].data_dirty = True
         self.displays[self.display][0].is_paused = not self.running
 
     def reload_displays(self):
@@ -118,16 +119,16 @@ class Matrix(object):
         parser.add_argument("--led-cols", action="store", help="Panel columns. Typically 32 or 64. (Default: 64)", default=64, type=int)
         parser.add_argument("-c", "--led-chain", action="store", help="Daisy-chained boards. Default: 4.", default=4, type=int)
         parser.add_argument("-P", "--led-parallel", action="store", help="For Plus-models or RPi2: parallel chains. 1..3. Default: 1", default=1, type=int)
-        parser.add_argument("-p", "--led-pwm-bits", action="store", help="Bits used for PWM. Something between 1..11. Default: 11", default=11, type=int)
         parser.add_argument("-b", "--led-brightness", action="store", help="Sets brightness level. Default: 100. Range: 1..100", default=100, type=int)
         parser.add_argument("-m", "--led-gpio-mapping", help="Hardware Mapping: regular, adafruit-hat, adafruit-hat-pwm" , default='adafruit-hat', choices=['regular', 'regular-pi1', 'adafruit-hat', 'adafruit-hat-pwm'], type=str)
-        parser.add_argument("--led-scan-mode", action="store", help="Progressive or interlaced scan. 0 Progressive, 1 Interlaced (default)", default=1, choices=range(2), type=int)
-        parser.add_argument("--led-pwm-lsb-nanoseconds", action="store", help="Base time-unit for the on-time in the lowest significant bit in nanoseconds. Default: 130", default=130, type=int)
+        parser.add_argument("--led-pixel-mapper", action="store", help="Apply pixel mappers. e.g \"Rotate:90\"", default="U-mapper", type=str)
         parser.add_argument("--led-show-refresh", action="store_true", help="Shows the current refresh rate of the LED panel")
         parser.add_argument("--led-slowdown-gpio", action="store", help="Slow down writing to GPIO. Range: 0..4. Default: 4", default=4, type=int) # 2 works pretty well for a pi3A+, 4 for a pi4b
         parser.add_argument("--led-no-hardware-pulse", action="store", help="Don't use hardware pin-pulse generation")
-        parser.add_argument("--led-rgb-sequence", action="store", help="Switch if your matrix has led colors swapped. Default: RGB", default="RGB", type=str)
-        parser.add_argument("--led-pixel-mapper", action="store", help="Apply pixel mappers. e.g \"Rotate:90\"", default="U-mapper", type=str)
+        # parser.add_argument("--led-rgb-sequence", action="store", help="Switch if your matrix has led colors swapped. Default: RGB", default="RGB", type=str)
+        # parser.add_argument("-p", "--led-pwm-bits", action="store", help="Bits used for PWM. Something between 1..11. Default: 11", default=11, type=int)
+        # parser.add_argument("--led-scan-mode", action="store", help="Progressive or interlaced scan. 0 Progressive, 1 Interlaced (default)", default=1, choices=range(2), type=int)
+        # parser.add_argument("--led-pwm-lsb-nanoseconds", action="store", help="Base time-unit for the on-time in the lowest significant bit in nanoseconds. Default: 130", default=130, type=int)
         # mlb arguments
         parser.add_argument("-t", action="store", help="2/3 letter abbreviation for the MLB team to display. BOS, TB, NYY. Befault: BOS", default="BOS", type=str)
         parser.add_argument("--enable-cycle", action="store_true", help="Enable cycling through all daily games when selected team's game is not in progress")
@@ -143,13 +144,17 @@ class Matrix(object):
         options.cols = clargs.led_cols
         options.chain_length = clargs.led_chain
         options.parallel = clargs.led_parallel
-        options.pixel_mapper_config = clargs.led_pixel_mapper # "U-mapper;Rotate:180"
+        options.brightness = clargs.led_brightness
         options.hardware_mapping = clargs.led_gpio_mapping  # If you have an Adafruit HAT: 'adafruit-hat'
-        if clargs.led_no_hardware_pulse:
-              options.disable_hardware_pulsing = True
-    #         options.disable_hardware_pulsing = True   # force = True for running inside Thonny (don't have to run as root)
+        options.pixel_mapper_config = clargs.led_pixel_mapper # "U-mapper;Rotate:180"
+        if clargs.led_show_refresh is not None:
+            options.show_refresh_rate = True
         if clargs.led_slowdown_gpio != None:
-                options.gpio_slowdown = clargs.led_slowdown_gpio
+            options.gpio_slowdown = clargs.led_slowdown_gpio
+        if clargs.led_no_hardware_pulse:
+            options.disable_hardware_pulsing = True
+    #         options.disable_hardware_pulsing = True   # force = True for running inside Thonny (don't have to run as root)
+        
         return RGBMatrix(options = options)
     
     def buildDisplays(self):
