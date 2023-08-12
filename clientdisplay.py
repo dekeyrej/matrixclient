@@ -52,18 +52,19 @@ class Matrix(object):
         except KeyError:
             ENVIRONMENT = 'NF'
         dd = DecryptDicts()
-        dd.read_key_from_file('Do_Not_Copy/refKey.txt')
-        secrets = dd.decrypt_dict(encsecrets)
+        dd.read_key_from_file('Do_Not_Copy/RealRefKey.txt')
+        # dd.read_key_from_file('Do_Not_Copy/refKey.txt')
+        self.secrets = dd.decrypt_dict(encsecrets)
         print(ENVIRONMENT)
         if ENVIRONMENT == '1':  # Production
             DBHOST = 'rocket2'
             DBPORT = 5432
-            self.r = redis.Redis(host='192.168.86.49', port=6379, db=0, decode_responses=True, password='@V3ryC0pl3xP@$$w0rd')
+            self.r = redis.Redis(host=self.secrets['redis_host'], port=6379, db=0, decode_responses=True, password=self.secrets['redis_password'])
         else:  # Development
             DBHOST = 'rocket3'
             DBPORT = 5432
             self.r = redis.Redis(host='rocket3', port=6379, db=0, decode_responses=True)
-        db_params = {"user": secrets['dbuser'], "pass": secrets['dbpass'], "host": DBHOST, "port":  DBPORT, "db_name": 'matrix', "tbl_name": 'feed'}
+        db_params = {"user": self.secrets['dbuser'], "pass": self.secrets['dbpass'], "host": DBHOST, "port":  DBPORT, "db_name": 'matrix', "tbl_name": 'feed'}
         self.dba = Database('postgres', db_params)
         if ENVIRONMENT == '1':
             self.write_start_record()
@@ -219,7 +220,7 @@ class Matrix(object):
         self.modules['MLB'] = MLBDisplay(db, self.matrix, team='BOS')
         self.modules['Track'] = GarminDisplay(db, self.matrix)
         self.modules['Uptime'] = Uptime(db, self.matrix)
-        self.modules['WiFi'] = WiFi(db, self.matrix)
+        self.modules['WiFi'] = WiFi(db, self.matrix, self.secrets['wifi_connect_string'])
         # self.modules['NFL'] = NFLDisplay(db, self.matrix)
         # self.modules['WC'] = WorldCupDisplay(db, self.matrix)
         ## end display classes

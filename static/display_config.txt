@@ -21,17 +21,17 @@
   },
   {
     "Page": "Current Weather",
-    "Time": 5,
+    "Time": 6,
     "Frames": 1
   },
   {
     "Page": "Hourly Weather",
-    "Time": 5,
+    "Time": 6,
     "Frames": 1
   },
   {
     "Page": "Forecast Weather",
-    "Time": 5,
+    "Time": 6,
     "Frames": 1
   },
   {
@@ -41,7 +41,7 @@
   },
   {
     "Page": "MLB",
-    "Time": 5,
+    "Time": 6,
     "Frames": 1
   },
   {
@@ -51,7 +51,7 @@
   },
   {
     "Page": "Uptime",
-    "Time": 5,
+    "Time": 6,
     "Frames": 1
   }
 ]

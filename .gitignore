@@ -1,6 +1,7 @@
 __pycache__/
 venv/
-Do_Not_Copy/refKey.txt
+Do_Not_Copy/RealRefKey.txt
+Do_Not_Copy/realmysecrets.py
 img/display.bmp
 static/thumb.bmp
 static/event.bmp
