@@ -1,7 +1,5 @@
 #!/bin/bash
-cd /home/pi/matrixclient
-# cd /home/pi/kubematrix/client
+export DIR="/home/pi/matrixclient"
+cd $DIR
 source venv/bin/activate
-/home/pi/matrixclient/venv/bin/python /home/pi/matrixclient/clientdisplay.py -i 1
-# /home/pi/kubematrix/client/clientdisplay.py -i 1
-#/home/pi/matrix/clientdisplay.py
+$DIR/venv/bin/python $DIR/clientdisplay.py -i 1
