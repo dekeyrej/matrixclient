@@ -1,0 +1,15 @@
+# copy this to /etc/systemd/system
+# run: sudo systectl enable matrix
+[Unit]
+Description=MatrixFlipper
+After=network-online.target
+StartLimitBurst=5
+StartLimitInterval=200
+
+[Service]
+ExecStart=/home/pi/kubematrix/client/mc.sh
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,29 @@
+<html>
+<head>
+<link rel="stylesheet" href='/static/matrix.css' />
+</head>
+<body>
+<h1>MatrixFlipper</h1>
+<h2>Controls:</h2>
+<form action="">
+  <input type="button" onclick="location.href='/rew/';" value="REW">
+  <input type="button" onclick="location.href='/pp/';"  value="Play/Pause">
+  <input type="button" onclick="location.href='/fwd/';" value="FWD">
+  <input type="button" onclick="location.href='/config/';" value="Config">
+</form>
+<div id="content">
+<h2>Status: {% if status %} Playing {% else %} Paused {% endif %}</h2>
+<h2>Current Display: {{ display }}</h2>
+<img src="{{url_for('static', filename='thumb.bmp')}}" alt="thumbnail of current display" width="512" height="256"><br>
+</div>
+    <script>
+      const update = (text) => {
+        document.getElementById('content').innerHTML = `${text}`;
+      };
+      const socket = new WebSocket('ws://' + location.host + '/connect');
+      socket.addEventListener('message', ev => {
+        update(ev.data);
+      });
+    </script>
+</body>
+</html>

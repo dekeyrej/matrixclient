@@ -1,0 +1,12 @@
+[
+  {
+    "Page": "WiFi",
+    "Time": 5,
+    "Frames": 1
+  },
+  {
+    "Page": "Current Weather",
+    "Time": 5,
+    "Frames": 1
+  }
+]

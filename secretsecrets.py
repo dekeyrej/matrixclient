@@ -1,0 +1,16 @@
+encsecrets = {
+  "timezone": "gAAAAABkRHiOIuJRo78R8icrSJ7uXyhhhTsvxuN5behNqJkDI1Mti5YwAeopJzzFwQ_1WroltuXLW-XHVpANHQlqDeK8Y7nRj7CLtsDeuuN7R5iEnZ9MF8Y=",
+  "owmkey": "gAAAAABkRHiOBSp8drGvvn7ktgVQ-UeyzOJ1w4MJJMs92TCu--3XrwysDa-7VHTuTCITQBZ9NIh_r_PNDrM-l8OQw3d5PvAY69IEZTrXLLS3quwVPFSf5DRFd-qCgcvIzcGET_QCEzGR",
+  "city": "gAAAAABkRHiO7glkTKDVIiNBGOjCNzHtiDDJv77359tiH_2LOG52fgPurims52Z4MK66ub8VnaUXfP44p0DCeS89b3HUHyXJJw==",
+  "state": "gAAAAABkRHiOvEuuHaH51-iHAWltFONCPRX1Mz3KkvMPafpb-jg1gQsESPdh__Sic_18r2ygHdbuAANDhQglLIHsxJYrX3UyJg==",
+  "country": "gAAAAABkRHiO2qHXxV6wGr6JO4INesyBXKt021ofj5KTd8uWs9PFN3QEvGchTvXKAqQjJqTEuiJwUkkuh_RKb25tsNif-7EdZQ==",
+  "google_calendar": "gAAAAABkRHiOKb2-1VNkB613Vqv3xlqCCI0JfXo3SQN0MkvpYwgBOzr4pURj-xbtHni5p7SN1GfWxaWN1N9ATlRTIVm5MnGyFHMBYNhyMWGIUPoLJiKRJ8CMiAhGnvARNJAFzJ_7A6HV7z_nNDtzS1z9nEYmFiCCRg==",
+  "google_api_key": "gAAAAABkRHiOKUrau_ENjqrxv7iLJzYdvcKFhNM8k9Grwcz-wmcCz_jXWwNfsFY4awQNcKbe7IqV0uqatA6FqRLQMc43cObzxUOLI7dUT9AEK-ILn3N0YAGKGl3vMTbb7ms19EO7DO-M",
+  "google_map_key": "gAAAAABkRHiOi1l-aMPUVeiFjGnIYY1uPQjm3A_TejzIKonoFSYWhfLdZQehWH77SlPzdC1Mt6me9OWnWJrN5fdpmozbHiWpBn5F1OIXR8uGsaAQsR7mJrhT61E4VS60oTfda2ayBR--",
+  "latitude": "gAAAAABkRHiO1SnJrLUPaLGo8ghHmVAj4aKotRp-GJ9AhOM934l4Ve5a4GK3R9OecIuHjM6sCrO3vT0REX50dYpszw8T_Mg4Eg==",
+  "longitude": "gAAAAABkRHiOQ5hBGH3A-iFa-V3tNcPGti1Ufuv29nwyA1Tzwvt4SMx19qkt_TUPKmt7BdLgUxEwtRqF9e6uTQTRRTOrUXO0Jg==",
+  "mongoClusterUsernamePassword": "gAAAAABkRHiOF2DwYsLJwa8XOgETMFF_utC58FgiJ5mACglrM9zGhoRKDcEevUVQjiIrR9d20kbXGhrRVwViekPE6tGm40AzcPnEhleLzNF0ioQ-blu-skc=",
+  "cockroachClusterUsernamePassword": "gAAAAABkRHiOFINOFsrbvWUKpUzqj3Tns2wQclL6T153xUNd_yu_dn22svmBON_amLn_Rw6zhwk6mQCNc21nKMUOavjOsKUsTw==",
+  "dbuser": "gAAAAABkRHiOM9STN9fkWNdGM8JYhULLC-cHEJ5icn8nz8MISUndoJDeu2VvKzJxv9necnt-Y5fDdljGrGHFoCSOmIwAtFhwvA==",
+  "dbpass": "gAAAAABkRHiOHrJbHkM-ELAQElpF6DwKGxniEvoAidlV3WWESitU6sjdMBV5xhO6E7oK_Jn1_vmo2vd62vj1R9pMJHQ9vDyasg=="
+}

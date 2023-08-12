@@ -1,0 +1,73 @@
+{
+    "type": "Default Config",
+    "updated": "03/11/2023 10:00 PM EST",
+    "valid" : "04/11/2023 11:00 PM EDT",
+    "values":
+        [
+          {
+            "Page": "Clock",
+            "Time": 5,
+            "Frames": 5
+          },
+          {
+            "Page": "Weekly Calendar",
+            "Time": 5,
+            "Frames": 1
+          },
+          {
+            "Page": "Next Family Event",
+            "Time": 5,
+            "Frames": 1
+          },
+          {
+            "Page": "Current Weather",
+            "Time": 5,
+            "Frames": 1
+          },
+          {
+            "Page": "Hourly Weather",
+            "Time": 5,
+            "Frames": 1
+          },
+          {
+            "Page": "Forecast Weather",
+            "Time": 5,
+            "Frames": 1
+          },
+          {
+            "Page": "Moon Display",
+            "Time": 5,
+            "Frames": 5
+          },
+          {
+            "Page": "MLB",
+            "Time": 5,
+            "Frames": 1
+          },
+          {
+            "Page": "NFL",
+            "Time": 5,
+            "Frames": 5
+          },
+            {
+            "Page": "WC",
+            "Time": 12,
+            "Frames": 4
+          },
+            {
+            "Page": "Track",
+            "Time": 5,
+            "Frames": 1
+          },
+          {
+            "Page": "Uptime",
+            "Time": 5,
+            "Frames": 1
+          },
+          {
+            "Page": "WiFi",
+            "Time": 5,
+            "Frames": 1
+          }
+        ]
+}

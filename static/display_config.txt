@@ -1,0 +1,57 @@
+[
+  {
+    "Page": "Clock",
+    "Time": 5,
+    "Frames": 5
+  },
+  {
+    "Page": "WiFi",
+    "Time": 5,
+    "Frames": 1
+  },
+  {
+    "Page": "Weekly Calendar",
+    "Time": 5,
+    "Frames": 1
+  },
+  {
+    "Page": "Next Family Event",
+    "Time": 5,
+    "Frames": 1
+  },
+  {
+    "Page": "Current Weather",
+    "Time": 5,
+    "Frames": 1
+  },
+  {
+    "Page": "Hourly Weather",
+    "Time": 5,
+    "Frames": 1
+  },
+  {
+    "Page": "Forecast Weather",
+    "Time": 5,
+    "Frames": 1
+  },
+  {
+    "Page": "Moon Display",
+    "Time": 5,
+    "Frames": 5
+  },
+  {
+    "Page": "MLB",
+    "Time": 5,
+    "Frames": 1
+  },
+  {
+    "Page": "Track",
+    "Time": 5,
+    "Frames": 1
+  },
+  {
+    "Page": "Uptime",
+    "Time": 5,
+    "Frames": 1
+  }
+]
