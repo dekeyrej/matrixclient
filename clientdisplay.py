@@ -60,14 +60,13 @@ class Matrix(object):
             DBPORT = 5432
             self.r = redis.Redis(host='192.168.86.49', port=6379, db=0, decode_responses=True, password='@V3ryC0pl3xP@$$w0rd')
         else:  # Development
-            DBHOST = 'rocket2'
+            DBHOST = 'rocket3'
             DBPORT = 5432
             self.r = redis.Redis(host='rocket3', port=6379, db=0, decode_responses=True)
         db_params = {"user": secrets['dbuser'], "pass": secrets['dbpass'], "host": DBHOST, "port":  DBPORT, "db_name": 'matrix', "tbl_name": 'feed'}
         self.dba = Database('postgres', db_params)
         if ENVIRONMENT == '1':
             self.write_start_record()
-        # self.r = redis.Redis(host='192.168.86.49', port=6379, db=0, decode_responses=True, password='@V3ryC0pl3xP@$$w0rd')
         self.running = True
         # list of displays
         self.displays = []
@@ -241,7 +240,7 @@ class Matrix(object):
             # give the displays a chance to update their data
             for d in self.displays:
                  d[0].check(anow)
-            if lastds == 0 or now - lastds > dsint:
+            if lastds == 0 or now - lastds > dsint or self.displays[self.display][0].data_dirty:
                 if self.running: self.display = (self.display + 1) % self.displayCount
                 dsint = self.displays[self.display][1]
                 framect = self.displays[self.display][2]
@@ -252,7 +251,7 @@ class Matrix(object):
                 if matrix is not None:
                     offscreen_canvas = matrix.SwapOnVSync(offscreen_canvas)
         #         print("Display: {}, Frame {} of {}".format(type(displays[display][0]).__name__,frame+1,framect))
-            elif lastfs == 0 or now - lastfs > fsint:
+            elif lastfs == 0 or now - lastfs > fsint or self.displays[self.display][0].data_dirty:
                 frame = (frame + 1) % framect
                 lastfs = now
                 offscreen_canvas = self.displays[self.display][0].display()
