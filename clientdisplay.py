@@ -101,7 +101,7 @@ class Matrix(object):
     commands = {'reload': reload_displays, 'pp': playPause}
 
     def check_redis_command(self):
-        cmd = self.r.get('command')
+        cmd = self.r.getdel('command')
         if cmd is None:
             pass
         else:
@@ -248,19 +248,19 @@ class Matrix(object):
                 fsint = dsint / framect
                 frame = 0
                 lastds = lastfs = now
-                # offscreen_canvas = self.displays[self.display][0].display()
-                # if matrix is not None:
-                #     offscreen_canvas = matrix.SwapOnVSync(offscreen_canvas)
+                offscreen_canvas = self.displays[self.display][0].display()
+                if matrix is not None:
+                    offscreen_canvas = matrix.SwapOnVSync(offscreen_canvas)
         #         print("Display: {}, Frame {} of {}".format(type(displays[display][0]).__name__,frame+1,framect))
             elif lastfs == 0 or now - lastfs > fsint:
                 frame = (frame + 1) % framect
                 lastfs = now
-                # offscreen_canvas = self.displays[self.display][0].display()
-                # if matrix is not None:
-                #     offscreen_canvas = matrix.SwapOnVSync(offscreen_canvas)
-            offscreen_canvas = self.displays[self.display][0].display()
-            if matrix is not None:
-                offscreen_canvas = matrix.SwapOnVSync(offscreen_canvas)
+                offscreen_canvas = self.displays[self.display][0].display()
+                if matrix is not None:
+                    offscreen_canvas = matrix.SwapOnVSync(offscreen_canvas)
+            # offscreen_canvas = self.displays[self.display][0].display()
+            # if matrix is not None:
+            #     offscreen_canvas = matrix.SwapOnVSync(offscreen_canvas)
             time.sleep(0.1)
 
 m = Matrix()
