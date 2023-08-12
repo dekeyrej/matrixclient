@@ -248,6 +248,7 @@ class Matrix(object):
                 frame = 0
                 lastds = lastfs = now
                 offscreen_canvas = self.displays[self.display][0].display()
+                self.displays[self.display][0].data_dirty = False
                 if matrix is not None:
                     offscreen_canvas = matrix.SwapOnVSync(offscreen_canvas)
         #         print("Display: {}, Frame {} of {}".format(type(displays[display][0]).__name__,frame+1,framect))
@@ -255,6 +256,7 @@ class Matrix(object):
                 frame = (frame + 1) % framect
                 lastfs = now
                 offscreen_canvas = self.displays[self.display][0].display()
+                self.displays[self.display][0].data_dirty = False
                 if matrix is not None:
                     offscreen_canvas = matrix.SwapOnVSync(offscreen_canvas)
             # offscreen_canvas = self.displays[self.display][0].display()
