@@ -107,6 +107,7 @@ class Matrix(object):
         if cmd is None:
             pass
         else:
+            print(cmd)
             try:
                 self.commands[cmd](self)
             except KeyError:
@@ -243,7 +244,7 @@ class Matrix(object):
             # give the displays a chance to update their data
             for d in self.displays:
                  d[0].check(anow)
-            if lastds == 0 or now - lastds > dsint or self.displays[self.display][0].data_dirty:
+            if lastds == 0 or now - lastds > dsint:
                 if self.running: self.display = (self.display + 1) % self.displayCount
                 dsint = self.displays[self.display][1]
                 framect = self.displays[self.display][2]
@@ -254,7 +255,7 @@ class Matrix(object):
                 if self.matrix is not None:
                     offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
         #         print("Display: {}, Frame {} of {}".format(type(displays[display][0]).__name__,frame+1,framect))
-            elif lastfs == 0 or now - lastfs > fsint or self.displays[self.display][0].data_dirty:
+            elif lastfs == 0 or now - lastfs > fsint:
                 frame = (frame + 1) % framect
                 lastfs = now
                 offscreen_canvas = self.displays[self.display][0].display()
