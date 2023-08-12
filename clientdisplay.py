@@ -89,11 +89,11 @@ class Matrix(object):
     def playPause(self):
         # acion to take on redis-delivered command 'pp'
         self.running = not self.running
-        self.displays[self.display][0].display().data_dirty = True
+        self.displays[self.display][0].data_dirty = True
+        self.displays[self.display][0].is_paused = not self.running
         offscreen_canvas = self.displays[self.display][0].display()
         if self.matrix is not None:
             offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
-        self.displays[self.display][0].is_paused = not self.running
 
     def reload_displays(self):
         # action to take on redis-delivered command 'reload'
