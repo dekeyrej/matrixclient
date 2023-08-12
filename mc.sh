@@ -1,4 +1,5 @@
 #!/bin/bash
+export PROD=1
 export DIR="/home/pi/matrixclient"
 cd $DIR
 source venv/bin/activate
