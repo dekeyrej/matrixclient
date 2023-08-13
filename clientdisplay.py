@@ -22,13 +22,12 @@ import time
 import arrow
 import sys
 import os
+import dotenv
 import redis
 
 from datasourcelib import Database          # wrapper for postgres/cockroach/sqlite/mongodb
 from securedict    import DecryptDicts      # decrypt the secretsecrets
-# from decrypt       import DecryptDicts
 from secretsecrets import encsecrets
-# from database      import Database
 
 from clock           import Clock
 from calevent        import CalendarEvent
@@ -47,27 +46,45 @@ from wifi            import WiFi
 class Matrix(object):
     
     def __init__(self):
+        dotenv.load_dotenv()
+        """
+        Expecting the following variables in the environment:
+        PROD=1 (prod) or 0 (dev)
+        DB_HOST= (hostname of IP address as a string)
+        DB_PORT= 5432 (for postgres)
+        DB_TYPE= "postgres" (or "sqlite" or "mongodb" - except they don't work yet)
+        REDIS_HOST= (hostname of IP address as a string)
+        REF_KEY_PATH="Do_Not_Copy/refKey.txt"
+        ENC_SECRETS_PATH="secretsecrets.py"
+        """
         try:
-            ENVIRONMENT = os.environ["PROD"]
-        except KeyError:
-            ENVIRONMENT = 'NF'
+            PROD             = os.environ["PROD"]
+            DBHOST           = os.environ["DB_HOST"]
+            DBPORT           = os.environ["DB_PORT"]
+            DBTYPE           = os.environ["DB_TYPE"]
+            REDIS_HOST       = os.environ["REDIS_HOST"]
+            REF_KEY_PATH     = os.environ["REF_KEY_PATH"]
+            ENC_SECRETS_PATH = os.environ["ENC_SECRETS_PATH"]
+        except KeyError as err:
+            print(f'KeyError: {err}')
+            raise
         dd = DecryptDicts()
-        dd.read_key_from_file('Do_Not_Copy/RealRefKey.txt')
-        # dd.read_key_from_file('Do_Not_Copy/refKey.txt')
+        dd.read_key_from_file(REF_KEY_PATH)
         self.secrets = dd.decrypt_dict(encsecrets)
-        print(ENVIRONMENT)
-        if ENVIRONMENT == '1':  # Production
-            DBHOST = 'rocket2'
-            DBPORT = 5432
-            self.r = redis.Redis(host=self.secrets['redis_host'], port=6379, db=0, decode_responses=True, password=self.secrets['redis_password'])
-        else:  # Development
-            DBHOST = 'rocket3'
-            DBPORT = 5432
-            self.r = redis.Redis(host='rocket3', port=6379, db=0, decode_responses=True)
-        db_params = {"user": self.secrets['dbuser'], "pass": self.secrets['dbpass'], "host": DBHOST, "port":  DBPORT, "db_name": 'matrix', "tbl_name": 'feed'}
-        self.dba = Database('postgres', db_params)
-        if ENVIRONMENT == '1':
+        db_params = {"user":      self.secrets['dbuser'], 
+                     "pass":      self.secrets['dbpass'], 
+                     "host":      DBHOST, 
+                     "port":      DBPORT, 
+                     "db_name":  'matrix', 
+                     "tbl_name": 'feed'}
+        self.dba = Database(DBTYPE, db_params)
+        print(PROD)
+        if PROD == '1':  # Production
             self.write_start_record()
+            self.r = redis.Redis(host=REDIS_HOST, port=6379, db=0, decode_responses=True, password=self.secrets['redis_password'])
+        else:            # Development, assuming redis for dev doesn't have a password #TODO
+            self.r = redis.Redis(host=REDIS_HOST, port=6379, db=0, decode_responses=True)
+
         self.running = True
         # list of displays
         self.displays = []
