@@ -44,5 +44,5 @@ class WiFi(DisplayPage):
         logo = Image.open("img/wifi-logo.bmp")
         icon = Image.new("RGB", (128,64))
         icon.paste(qrc, box=(11,11))
-        icon.paste(logo, box=(68,11))
+        icon.paste(logo, box=(61,11))
         return icon
