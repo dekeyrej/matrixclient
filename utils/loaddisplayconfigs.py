@@ -1,13 +1,15 @@
-from securedict    import DecryptDicts
-from secretsecrets import encsecrets
 from datasourcelib import Database
 
 import json
 import arrow
 
-dd = DecryptDicts()
-dd.read_key_from_file('Do_Not_Copy/refKey.txt')
-secrets = dd.decrypt_dict(encsecrets)
+def read_secrets(path):
+    with open(path) as file:
+        newsecrets = json.loads(file.read())
+        file.close()
+    return newsecrets
+
+secrets = read_secrets("../secrets.json")
 DBHOST = 'rocket3'
 DBPORT = 5432
 db_params = {"user": secrets['dbuser'], "pass": secrets['dbpass'], "host": DBHOST, "port":  DBPORT, "db_name": 'matrix', "tbl_name": 'feed'}
@@ -38,8 +40,5 @@ def loadDefaultConfig(path):
     print(json.dumps(config, indent=2))
     return config
 
-# loadDefaultConfig('static\default_config.txt')
-# loadDisplayConfig('static\display_config.txt')
-
-saveDefaultConfig(db, loadDefaultConfig('static\default_config.txt'))
-saveDisplayConfig(db, loadDisplayConfig('static\display_config.txt'))
+saveDefaultConfig(db, loadDefaultConfig('..\static\default_config.txt'))
+saveDisplayConfig(db, loadDisplayConfig('..\static\display_config.txt'))

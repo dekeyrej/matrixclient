@@ -22,10 +22,8 @@
 - chmod 777 static/
 
 *Setup your secrets*
-- cd to Do_Not_Copy
-- copy sample_mysecrets.py to mysecrets.py
+- copy sample_secrets.json to secrets.json
 - edit with your values
-- run python encrypt_secrets.py to generate refKey.txt and ../secretsecrets.py 
 
 *Test the setup*
 - sudo ./mc.sh

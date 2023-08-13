@@ -22,12 +22,11 @@ import time
 import arrow
 import sys
 import os
+
 import dotenv
 import redis
 
-from datasourcelib import Database          # wrapper for postgres/cockroach/sqlite/mongodb
-from securedict    import DecryptDicts      # decrypt the secretsecrets
-from secretsecrets import encsecrets
+from datasourcelib   import Database          # wrapper for postgres/cockroach/sqlite/mongodb
 
 from clock           import Clock
 from calevent        import CalendarEvent
@@ -54,8 +53,7 @@ class Matrix(object):
         DB_PORT= 5432 (for postgres)
         DB_TYPE= "postgres" (or "sqlite" or "mongodb" - except they don't work yet)
         REDIS_HOST= (hostname of IP address as a string)
-        REF_KEY_PATH="Do_Not_Copy/refKey.txt"
-        ENC_SECRETS_PATH="secretsecrets.py"
+        SECRETS_PATH="secrets.json"
         """
         try:
             PROD             = os.environ["PROD"]
@@ -63,14 +61,12 @@ class Matrix(object):
             DBPORT           = os.environ["DB_PORT"]
             DBTYPE           = os.environ["DB_TYPE"]
             REDIS_HOST       = os.environ["REDIS_HOST"]
-            REF_KEY_PATH     = os.environ["REF_KEY_PATH"]
-            ENC_SECRETS_PATH = os.environ["ENC_SECRETS_PATH"]
+            SECRETS_PATH     = os.environ["SECRETS_PATH"]
         except KeyError as err:
             print(f'KeyError: {err}')
             raise
-        dd = DecryptDicts()
-        dd.read_key_from_file(REF_KEY_PATH)
-        self.secrets = dd.decrypt_dict(encsecrets)
+
+        self.secrets = self.read_secrets(SECRETS_PATH)
         db_params = {"user":      self.secrets['dbuser'], 
                      "pass":      self.secrets['dbpass'], 
                      "host":      DBHOST, 
@@ -81,7 +77,8 @@ class Matrix(object):
         print(PROD)
         if PROD == '1':  # Production
             self.write_start_record()
-            self.r = redis.Redis(host=REDIS_HOST, port=6379, db=0, decode_responses=True, password=self.secrets['redis_password'])
+            self.r = redis.Redis(host=REDIS_HOST, port=6379, db=0, decode_responses=True, 
+                                 password=self.secrets['redis_password'])
         else:            # Development, assuming redis for dev doesn't have a password #TODO
             self.r = redis.Redis(host=REDIS_HOST, port=6379, db=0, decode_responses=True)
 
@@ -92,6 +89,12 @@ class Matrix(object):
         self.config = []
         self.display = 0
         self.displayCount = 1
+
+    def read_secrets(self,path):
+        with open(path) as file:
+            newsecrets = json.loads(file.read())
+            file.close()
+        return newsecrets
         
     def write_start_record(self):
         # Write Startup record to database

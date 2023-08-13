@@ -1,7 +1,0 @@
-encsecrets = {
-  "dbuser": "gAAAAABk197fLe8y3ubfBb2xP4EO3ctM4EbuiOFoik3SngnYKIkTC7h9em9g-bjsi5bjZIr1l9nNl3XghpYPlYXQDVr9SEP9LA==",
-  "dbpass": "gAAAAABk197f10Tl6sNNjqzWqVtsGTRpZq7Vde0NgBe82DuhSIKmx8w_g7qsc2MFAZuj1V6MOvxe_Gio3C_C5GVvR519Q4rLNw==",
-  "wifi_connect_string": "gAAAAABk197fJmMekW4oHqd9egPdW46JCSjkEvOMx_VCA2-TDmYrxU7ulx_DbMheBRaGutfayxpdryKJ2EQa_Bynl6_-o4K5GeN0ccRiWw_R9Du0Jhp9v0ySbvi0tR5HyswGNIO01s3shGcgTfmSkeixT5yQaiiiJHqZzNyMvnZ34nK7gg2uJ0s=",
-  "redis_host": "gAAAAABk197fY7FUbi58pXbHdMtIHEUJSd34UhftQjfu9iKGQYUjmHCfiO8-_9FWmFA-ioGlbWqldAHLbRTJai1O6KdeE_fWBg==",
-  "redis_password": "gAAAAABk197fn27xSpqhbSjpfmUpwls0NJ-BZO93TuDLnmqRr-Os64ogGKLTPod69fvEo_lL7Kgf3YStKE1YGCgKs257Jkl4YwlynzvGpZBEt6SOc0TshbU="
-}

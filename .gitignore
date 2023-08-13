@@ -1,9 +1,5 @@
 __pycache__/
 venv/
-Do_Not_Copy/RealRefKey.txt
-Do_Not_Copy/refKey.txt
-Do_Not_Copy/realmysecrets.py
-Do_Not_Copy/realsecretsecrets.py
-Do_Not_Copy/mysecrets.py
 static/*.bmp
-secretsecrets.py
+.env
+secrets.json
