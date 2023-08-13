@@ -1,7 +1,7 @@
 import arrow
 from PIL import Image, ImageDraw
 import qrcode
-from pages import DisplayPage
+from pages.displaypage import DisplayPage
 
 class WiFi(DisplayPage):
     

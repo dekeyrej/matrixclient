@@ -1,7 +1,7 @@
 import arrow
 import json
 from PIL import Image, ImageFont, ImageDraw
-from pages import DisplayPage
+from pages.displaypage import DisplayPage
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/rpi-rgb-led-matrix/bindings/python'))

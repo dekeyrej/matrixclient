@@ -1,6 +1,6 @@
 import arrow
 from PIL import Image, ImageFont, ImageDraw
-from pages import DisplayPage
+from pages.displaypage import DisplayPage
 import textwrap
 
 import sys
