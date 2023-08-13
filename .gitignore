@@ -5,8 +5,5 @@ Do_Not_Copy/refKey.txt
 Do_Not_Copy/realmysecrets.py
 Do_Not_Copy/realsecretsecrets.py
 Do_Not_Copy/mysecrets.py
-img/display.bmp
-static/thumb.bmp
-static/event.bmp
-static/wifi.bmp
+static/*.bmp
 secretsecrets.py
