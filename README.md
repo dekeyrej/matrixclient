@@ -1,9 +1,12 @@
-# matrixclient
+# matrixclient #
+
+*Prerequisites*
+
 
 *Install rpi-rgb-led-matrix*
-- clone it
-- make it
-- cd bindings/python and make that too
+- clone it from https://github.com/hzeller/rpi-rgb-led-matrix.git
+- cd rpi-rgb-led-matrix ; run make
+- cd bindings/python and sudo make install
 
 *Clone the repo*
 - clone repositiory someplace 'suitable'
