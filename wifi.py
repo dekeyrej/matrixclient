@@ -33,8 +33,8 @@ class WiFi(DisplayPage):
 
     def generate_qrcode(self,wifi_connect_string):
         qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            version=None,
+            error_correction=qrcode.constants.ERROR_CORRECT_M,
             box_size=1,
             border=4
             )
