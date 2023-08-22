@@ -1,7 +1,7 @@
 from PIL import Image, ImageFont, ImageDraw
 import json
 import arrow
-from pages import DisplayPage
+from pages.displaypage import DisplayPage
 
 import sys
 import os
