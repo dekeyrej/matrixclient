@@ -14,7 +14,7 @@
 #    Udpates all of the internet-driven datasets for the matrix display. Optimizes update frequency,
 #    converts/reformats all incoming data to be 'display ready', broadcasts the display-ready data via Websockets.
 
-# Todo: refactor as class, add back in the webpage display/configuration of displays, etc.
+# Todo: add back in the webpage display/configuration of displays, etc.
 
 import argparse
 import json
@@ -48,19 +48,18 @@ class Matrix(object):
         dotenv.load_dotenv()
         """
         Expecting the following variables in the environment:
-        PROD=1 (prod) or 0 (dev)
-        DB_HOST= (hostname of IP address as a string)
-        DB_PORT= 5432 (for postgres)
-        DB_TYPE= "postgres" (or "sqlite" or "mongodb" - except they don't work yet)
-        REDIS_HOST= (hostname of IP address as a string)
+        PROD=2 (prod) or 1 (test) or 0 (dev)
         SECRETS_PATH="secrets.json"
         """
         try:
-            PROD             = os.environ["PROD"]
-            DBHOST           = os.environ["DB_HOST"]
-            DBPORT           = os.environ["DB_PORT"]
-            DBTYPE           = os.environ["DB_TYPE"]
-            REDIS_HOST       = os.environ["REDIS_HOST"]
+            PROD = os.environ["PROD"]
+            print(PROD)
+            if PROD   == '2':
+                self.env = 'prod'
+            elif PROD == '1':
+                self.env = 'test'
+            else:
+                self.env = 'dev'
             SECRETS_PATH     = os.environ["SECRETS_PATH"]
         except KeyError as err:
             print(f'KeyError: {err}')
@@ -69,18 +68,20 @@ class Matrix(object):
         self.secrets = self.read_secrets(SECRETS_PATH)
         db_params = {"user":      self.secrets['dbuser'], 
                      "pass":      self.secrets['dbpass'], 
-                     "host":      DBHOST, 
-                     "port":      DBPORT, 
+                     "host":      self.secrets['dbhost'][self.env], 
+                     "port":      self.secrets['dbport'][self.env], 
                      "db_name":  'matrix', 
                      "tbl_name": 'feed'}
-        self.dba = Database(DBTYPE, db_params)
-        print(PROD)
-        if PROD == '1':  # Production
-            self.write_start_record()
-            self.r = redis.Redis(host=REDIS_HOST, port=6379, db=0, decode_responses=True, 
-                                 password=self.secrets['redis_password'])
-        else:            # Development, assuming redis for dev doesn't have a password #TODO
-            self.r = redis.Redis(host=REDIS_HOST, port=6379, db=0, decode_responses=True)
+        self.dba = Database(self.secrets['dbtype'], db_params)
+        if PROD == '2':  # Production
+            pass
+            # self.write_start_record()
+        # setup redis connection
+        if self.secrets['rpass'][self.env] == 'None':
+            self.r = redis.Redis(host=self.secrets['rhost'][self.env], port=6379, db=0, decode_responses=True)
+        else:
+            self.r = redis.Redis(host=self.secrets['rhost'][self.env], port=6379, db=0, decode_responses=True, 
+                                 password=self.secrets['rpass'][self.env])
 
         self.running = True
         # list of displays
@@ -107,6 +108,8 @@ class Matrix(object):
         # print(json.dumps(data,indent=2))
         self.dba.write(data)
     
+    # start redis command interface
+    ## toggles play state (whether to advance the displays)
     def playPause(self):
         # acion to take on redis-delivered command 'pp'
         self.running = not self.running
@@ -116,13 +119,16 @@ class Matrix(object):
         if self.matrix is not None:
             offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
 
+    ## forces a reload of the display configuration
     def reload_displays(self):
         # action to take on redis-delivered command 'reload'
         self.loadConfig()
         self.buildDisplays()
 
+    ## list of command names and the associated subroutines
     commands = {'reload': reload_displays, 'pp': playPause}
 
+    ## reads the redis key, matches the command name, and executes the associated subroutine
     def check_redis_command(self):
         cmd = self.r.getdel('command')
         if cmd is None:
@@ -133,6 +139,7 @@ class Matrix(object):
                 self.commands[cmd](self)
             except KeyError:
                 print(f'Unknown command "{cmd}"')
+    # end redis commmand interface
 
     def parseCL(self):
         parser = argparse.ArgumentParser()
