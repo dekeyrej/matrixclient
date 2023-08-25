@@ -109,6 +109,18 @@ class Matrix(object):
         self.dba.write(data)
     
     # start redis command interface
+    ## steps backwards 1 display
+    def back_step(self):
+        if not self.running:
+            self.displays[self.display][0].data_dirty = True
+            self.displays[self.display][0].is_paused = False
+            self.display = (self.display - 1) % self.displayCount
+            self.displays[self.display][0].data_dirty = True
+            self.displays[self.display][0].is_paused = True
+            offscreen_canvas = self.displays[self.display][0].display()
+            if self.matrix is not None:
+                offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
+    
     ## toggles play state (whether to advance the displays)
     def playPause(self):
         # acion to take on redis-delivered command 'pp'
@@ -118,6 +130,18 @@ class Matrix(object):
         offscreen_canvas = self.displays[self.display][0].display()
         if self.matrix is not None:
             offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
+    
+    ## steps forwards 1 display
+    def forward_step(self):
+        if not self.running:
+            self.displays[self.display][0].data_dirty = True
+            self.displays[self.display][0].is_paused = False
+            self.display = (self.display + 1) % self.displayCount
+            self.displays[self.display][0].data_dirty = True
+            self.displays[self.display][0].is_paused = True
+            offscreen_canvas = self.displays[self.display][0].display()
+            if self.matrix is not None:
+                offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
 
     ## forces a reload of the display configuration
     def reload_displays(self):
@@ -126,7 +150,7 @@ class Matrix(object):
         self.buildDisplays()
 
     ## list of command names and the associated subroutines
-    commands = {'reload': reload_displays, 'pp': playPause}
+    commands = {'reload': reload_displays, 'pp': playPause, 'rew': back_step, 'fwd': forward_step}
 
     ## reads the redis key, matches the command name, and executes the associated subroutine
     def check_redis_command(self):
