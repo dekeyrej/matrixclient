@@ -78,7 +78,7 @@ class MoonDisplay(DisplayPage):
                 draw.line(((127,0),(127,2)), fill='White', width=1)
             self.icon.save("static/moon.bmp", "BMP")
             self.dirty = True
-            self.data_dirty = False
+            self.data_dirty = True  # updates the display 1/second
         if self.matrix:
             self.my_canvas.Clear()
             self.my_canvas.SetImage(self.icon,0,0)
