@@ -1,5 +1,10 @@
 __pycache__/
 venv/
+img/
+Do_Not_Copy/
 static/*.bmp
 .env
 secrets.json
+matrix.service
+mc.sh
+rpi-rgb-led-matrix

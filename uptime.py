@@ -99,13 +99,13 @@ class Uptime(DisplayPage):
     def uptime_color(self, now, then):
         # print(int(float(tnow.format('X')) - float(client_start_time.format('X'))))
         time = int(float(now.format('X')) - float(then.format('X')))
-        if time < 60 * 30:        # 30 minutes
+        if time < 60 * 15:        # 15 minutes
             return "Orange"
-        elif time < 60 * 60:      # 60 minutes
+        elif time < 60 * 30:      # 30 minutes
             return "Yellow"
-        elif time < 60 * 60 * 6:  # 6 hours
+        elif time < 60 * 60 * 1:  # 1 hour
             return "Green"
-        elif time < 60 * 60 * 24: # 24 hours
+        elif time < 60 * 60 *  6: #  6 hours
             return "Turquoise"
         else:
             return "Blue"
