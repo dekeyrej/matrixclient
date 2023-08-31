@@ -19,7 +19,7 @@ class NextEvent(DisplayPage):
         self.font    = ImageFont.load(r'fonts/7x13B.pil')
         self.line = list(("","","",""))
         self.icon = None
-        self.type = 'Family'
+        self.type = 'Events'
         # f = open("events.txt")
         # self.events = json.loads(f.read())
         # f.close()

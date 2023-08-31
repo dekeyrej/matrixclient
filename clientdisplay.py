@@ -82,7 +82,8 @@ class Matrix(object):
         else:
             self.r = redis.Redis(host=self.secrets['rhost'][self.env], port=6379, db=0, decode_responses=True, 
                                  password=self.secrets['rpass'][self.env])
-
+        self.p = self.r.pubsub()
+        self.p.subscribe('webcontrol', 'update')
         self.running = True
         # list of displays
         self.displays = []
@@ -152,17 +153,43 @@ class Matrix(object):
     ## list of command names and the associated subroutines
     commands = {'reload': reload_displays, 'pp': playPause, 'rew': back_step, 'fwd': forward_step}
 
+    ## find the display(s) concerned with a particular 'rectype'
+    def find_displays_by_type(self,tag):
+        ret = []
+        for i in range(self.displayCount):
+            # print(f"{i}: {type(self.displays[i][0])}")
+            if self.displays[i][0].type == tag:
+                # print('Found it!')
+                # return i
+                ret.append(i)
+        if ret != []:
+            return ret
+        return None
+
     ## reads the redis key, matches the command name, and executes the associated subroutine
     def check_redis_command(self):
-        cmd = self.r.getdel('command')
-        if cmd is None:
-            pass
-        else:
-            print(cmd)
-            try:
-                self.commands[cmd](self)
-            except KeyError:
-                print(f'Unknown command "{cmd}"')
+        # cmd = self.r.getdel('command')
+        cmd = self.p.get_message(ignore_subscribe_messages=True, timeout=0.01)
+        if cmd is not None:
+            # print(cmd)
+            if cmd['channel'] == 'webcontrol':
+                try:
+                    self.commands[cmd['data']](self)
+                except KeyError:
+                    print(f"Unknown control [{cmd['data']}]")
+            elif cmd['channel'] == 'update':
+                try:
+                    displaylist = self.find_displays_by_type(cmd['data'])
+                    if displaylist is not None:
+                        for display in displaylist:
+                            # print(display)
+                            print(f"{cmd['data']}: {type(self.displays[display][0])}")
+                            self.displays[display][0].update()
+                except KeyError:
+                    print(f"Unknown update [{cmd['data']}]")
+            else:
+                print(f"Unknown message [{cmd}]")
+
     # end redis commmand interface
 
     def parseCL(self):
@@ -280,6 +307,10 @@ class Matrix(object):
         self.buildDisplays()
         self.saveConfig()
 
+        # update the display data once to get started
+        for d in self.displays:
+            d[0].check(arrow.now().to('US/Eastern'))
+
         lastds = 0
         dsint = self.displays[self.display][1]
         frame = 0
@@ -290,12 +321,12 @@ class Matrix(object):
         # Main loop which cycles between the displays
         while True:
             now = time.monotonic()
-            anow = arrow.now().to('US/Eastern')
+            # anow = arrow.now().to('US/Eastern')
             # check for redis-delivered command
             self.check_redis_command()
             # give the displays a chance to update their data
-            for d in self.displays:
-                 d[0].check(anow)
+            # for d in self.displays:
+            #      d[0].check(anow)
             if lastds == 0 or now - lastds > dsint:
                 if self.running: self.display = (self.display + 1) % self.displayCount
                 dsint = self.displays[self.display][1]
