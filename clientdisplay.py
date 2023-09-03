@@ -176,7 +176,7 @@ class Matrix(object):
                 try:
                     self.commands[cmd['data']](self)
                 except KeyError:
-                    print(f"Unknown control [{cmd['data']}]")
+                    print(f"Unknown control command: [{cmd['data']}]")
             elif cmd['channel'] == 'update':
                 try:
                     displaylist = self.find_displays_by_type(cmd['data'])
@@ -186,7 +186,7 @@ class Matrix(object):
                             print(f"{cmd['data']}: {type(self.displays[display][0])}")
                             self.displays[display][0].update()
                 except KeyError:
-                    print(f"Unknown update [{cmd['data']}]")
+                    print(f"Unknown update tag: [{cmd['data']}]")
             else:
                 print(f"Unknown message [{cmd}]")
 
