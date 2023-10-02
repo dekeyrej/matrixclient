@@ -47,7 +47,7 @@ class NFLDisplay(DisplayPage):
                     if game['awayabrv'] == self.favorite or game['homeabrv'] == self.favorite:
                         self.favoriteGame = id
                         self.currentGame = id
-            self.gameCount = len(self.games) + 1
+            self.gameCount = len(self.games)
             self.activecount = len(self.activegames)
             # print(json.dumps(self.activegames, indent=1))
             # print(self.activecount)
@@ -65,8 +65,9 @@ class NFLDisplay(DisplayPage):
                         game = self.games[self.activegames[self.active]]
                     else:
                         #display cycle all
-                        self.currentGame = max(1,(self.currentGame + 1) % self.gameCount) # cycle all
-                        game = self.games[str(self.currentGame)]
+                        self.currentGame = (self.currentGame + 1) % self.gameCount # cycle all
+                        # self.currentGame = max(1,(self.currentGame + 1) % self.gameCount) # cycle all
+                        game = self.games[self.currentGame]
                 else: # we have a favorite team
                     if self.favoriteGame == "": # no favorite game scheduled this week
                         if self.activecount > 0:
@@ -75,8 +76,9 @@ class NFLDisplay(DisplayPage):
                             game = self.games[self.activegames[self.active]]
                         else:
                             #display cycle all
-                            self.currentGame = max(1,(self.currentGame + 1) % self.gameCount) # cycle all
-                            game = self.games[str(self.currentGame)]
+                            self.currentGame = (self.currentGame + 1) % self.gameCount # cycle all
+                            # self.currentGame = max(1,(self.currentGame + 1) % self.gameCount) # cycle all
+                            game = self.games[self.currentGame]
                     else: # favorite team playing this week
                         #display favorite game
                         game = self.games[self.favoriteGame]
@@ -88,7 +90,7 @@ class NFLDisplay(DisplayPage):
         if self.is_paused:
             draw.line(((125,0),(125,2)), fill='White', width=1)
             draw.line(((127,0),(127,2)), fill='White', width=1)
-        self.icon.save("static/thumb.bmp", "BMP")
+        self.icon.save("static/nfl.bmp", "BMP")
         self.dirty = True
         if self.matrix:
             self.my_canvas.Clear()
