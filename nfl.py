@@ -1,5 +1,6 @@
 import requests
 import json
+import arrow
 from PIL import Image, ImageFont, ImageDraw
 import textwrap
 from pages.displaypage import DisplayPage
@@ -9,40 +10,47 @@ sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/rpi-rgb-led-matrix
 # from rgbmatrix import RGBMatrix
 
 class NFLDisplay(DisplayPage):
-    def __init__(self,matrix=None, twelve=True):
-        super().__init__(matrix)
+    def __init__(self, dba, matrix=None, favorite=''):
+        super().__init__(dba, matrix)
         if matrix is not None:
             from rgbmatrix import RGBMatrix
             self.matrix = True
         else:
             self.matrix = False
-        self.event = 'nfl_event'
-        self.no_event = 'no_nfl_event'
+        self.dba = dba
+        self.type = 'NFL'
         self.currentGame = 0
         self.gameCount = 0
         self.last = 0
         self.textColor = (255,255,255)
         self.font      = ImageFont.load(r'fonts/5x7.pil')
         self.bgfont    = ImageFont.load(r'fonts/6x10.pil')
-        self.favorite = ''
+        self.favorite = favorite
         self.favoriteGame = ""
         self.active = 0
         self.activecount = 0
         
               
-    def update(self,data):
-        self.games = data
-        if data is not None:
+    def update(self):
+        self.values = self.dba.read(self.type)
+        if self.values is not None:
+            self.data_dirty = True
+            self.nextUpdate = arrow.get(self.fix_edt(self.values['valid']),'MM/DD/YYYY h:mm:ss A ZZZ').shift(seconds=+1)
+        self.games = self.values['values']
+        if self.values['values'] is not None:
             self.activegames = []
+            # self.active = 0
             self.favoriteGame = ""
-            for game in self.games:
-                if self.games[game]['state'] == 'in':
-                    self.activegames.append(game)
-                    if self.games[game]['awayabrv'] == self.favorite or self.games[game]['homeabrv'] == self.favorite:
-                        self.favoriteGame = game
-                        self.currentGame = int(game)
+            for id, game in enumerate(self.games):
+                if game['state'] == 'in':
+                    self.activegames.append(id)
+                    if game['awayabrv'] == self.favorite or game['homeabrv'] == self.favorite:
+                        self.favoriteGame = id
+                        self.currentGame = id
             self.gameCount = len(self.games) + 1
             self.activecount = len(self.activegames)
+            # print(json.dumps(self.activegames, indent=1))
+            # print(self.activecount)
 
         
     def display(self):
@@ -71,11 +79,11 @@ class NFLDisplay(DisplayPage):
                             game = self.games[str(self.currentGame)]
                     else: # favorite team playing this week
                         #display favorite game
-                        game = self.games[str(self.favoriteGame)]
+                        game = self.games[self.favoriteGame]
                 self.DrawGame(draw,game)
             else: # no games this week
                 self.DrawNoGames(draw)  
-        else: # no weather data received
+        else: # no game data received
             draw.text(( 1,  2), "No nfl data received.", font = self.font, fill='white')
         if self.is_paused:
             draw.line(((125,0),(125,2)), fill='White', width=1)
@@ -131,17 +139,20 @@ class NFLDisplay(DisplayPage):
         # Draw time remaining in period
         draw.text((50, 8), game['clock'], font = self.font, fill=self.textColor)
         # Draw the down & yards to go
-        draw.text((50,17), game['downandyardage'],   font = self.font, fill=self.textColor)
+        draw.text((50,17), game.get('downandyardage',''),   font = self.font, fill=self.textColor)
         # Draw ball position
-        draw.text((50,24), game['position'],   font = self.font, fill=self.textColor)
+        draw.text((50,24), game.get('position',''),   font = self.font, fill=self.textColor)
         # Indicate who has possession
-        if game['possession'] == game['awayabrv']:
-            self.DrawPossession(draw, True, (255,255,255), (150,75,0)) # 'football' outline in white, fill in brown
-        elif game['possession'] == game['homeabrv']:
-            self.DrawPossession(draw, False, (255,255,255), (150,75,0)) # 'football' outline in white, fill in brown
+        poss = game.get('possession','')
+        if poss != '':
+            if poss == game['awayabrv']:
+                self.DrawPossession(draw, True, (255,255,255), (150,75,0)) # 'football' outline in white, fill in brown
+            elif poss == game['homeabrv']:
+                self.DrawPossession(draw, False, (255,255,255), (150,75,0)) # 'football' outline in white, fill in brown
         # Draw the last play
         i = 0
-        for line in textwrap.wrap(game['lastplay'],width=25, expand_tabs=False, max_lines=4):
+        lastplay = game.get('lastplay', '')
+        for line in textwrap.wrap(lastplay,width=25, expand_tabs=False, max_lines=4):
             draw.text((1,33 + i * 8), line, font = self.font, fill=self.textColor)
             i += 1
             

@@ -45,7 +45,7 @@
     "Frames": 1
   },
   {
-    "Page": "Track",
+    "Page": "NFL",
     "Time": 5,
     "Frames": 1
   },
