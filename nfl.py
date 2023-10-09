@@ -10,7 +10,7 @@ sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/rpi-rgb-led-matrix
 # from rgbmatrix import RGBMatrix
 
 class NFLDisplay(DisplayPage):
-    def __init__(self, dba, matrix=None, favorite=''):
+    def __init__(self, dba, matrix=None, team='', strict=False):
         super().__init__(dba, matrix)
         if matrix is not None:
             from rgbmatrix import RGBMatrix
@@ -21,72 +21,87 @@ class NFLDisplay(DisplayPage):
         self.type = 'NFL'
         self.currentGame = 0
         self.gameCount = 0
-        self.last = 0
         self.textColor = (255,255,255)
         self.font      = ImageFont.load(r'fonts/5x7.pil')
         self.bgfont    = ImageFont.load(r'fonts/6x10.pil')
-        self.favorite = favorite
-        self.favoriteGame = ""
-        self.active = 0
-        self.activecount = 0
+        self.favorite = team
+        self.strict = strict
+        if team == '':
+            self.strict = False
+        self.games = []
+        self.all_games = []
+        self.active_games = []
+        self.favorite_games = []
+        self.output = False
         
               
     def update(self):
         self.values = self.dba.read(self.type)
-        if self.values is not None:
-            self.data_dirty = True
-            self.nextUpdate = arrow.get(self.fix_edt(self.values['valid']),'MM/DD/YYYY h:mm:ss A ZZZ').shift(seconds=+1)
-        self.games = self.values['values']
-        if self.values['values'] is not None:
-            self.activegames = []
+        if self.values['values']:
+            self.games = self.values['values']
+            self.all_games = list(range(len(self.games)))
+            self.active_games = []
+            self.favortite_games = []
+            self.mode = 'cycle_all'
             # self.active = 0
             self.favoriteGame = ""
             for id, game in enumerate(self.games):
-                if game['state'] == 'in':
-                    self.activegames.append(id)
-                    if game['awayabrv'] == self.favorite or game['homeabrv'] == self.favorite:
-                        self.favoriteGame = id
-                        self.currentGame = id
+                if self.output: print(f'game loop {id}')
+                teams = (game['awayabrv'], game['homeabrv'])
+                status = game['state']
+                if status == 'in':
+                    if self.output: print(f'   in active {id}')
+                    self.active_games.append(id)
+                    self.mode = 'cycle_active'
+                    # if self.mode != 'cycle_favorite': self.mode = 'cycle_active'
+                    if self.favorite in teams:
+                        if self.output: print(f'      in fav {id} (should break)')
+                        self.favorite_games.clear()
+                        self.favorite_games.append(id)
+                        self.mode = 'cycle_favorite'
+                        break
+                elif status == 'pre':
+                    if self.output: print(f'   in pre   {id}')
+                    if self.favorite in teams:
+                        if self.output: print(f'      in fav {id}')
+                        self.favorite_games.append(id)
+                        self.mode = 'cycle_favorite'
+                elif status == 'post':
+                    if self.output: print(f'   in post  {id}')
+                    if self.favorite in teams:
+                        if self.output: print(f'      in fav {id}')
+                        self.favorite_games.append(id)
+                        self.mode = 'cycle_favorite'
             self.gameCount = len(self.games)
-            self.activecount = len(self.activegames)
-            # print(json.dumps(self.activegames, indent=1))
-            # print(self.activecount)
 
-        
+    def next_game(self, id: int , gamelist: list[int]) -> int:
+        if id in gamelist: 
+            current = gamelist.index(id)
+            return gamelist[(current + 1) % len(gamelist)]
+        else:
+            return gamelist[0]    
+    
     def display(self):
         self.icon = Image.new("RGB", (128,64))
         draw = ImageDraw.Draw(self.icon)
-        if self.games is not None:
-            if self.gameCount > 1:
-                if self.favorite == '': # no favorite
-                    if self.activecount > 0:
-                        #display cycle active
-                        self.active = (self.active + 1) % self.activecount
-                        game = self.games[self.activegames[self.active]]
-                    else:
-                        #display cycle all
-                        self.currentGame = (self.currentGame + 1) % self.gameCount # cycle all
-                        # self.currentGame = max(1,(self.currentGame + 1) % self.gameCount) # cycle all
-                        game = self.games[self.currentGame]
-                else: # we have a favorite team
-                    if self.favoriteGame == "": # no favorite game scheduled this week
-                        if self.activecount > 0:
-                            #display cycle active
-                            self.active = (self.active + 1) % self.activecount
-                            game = self.games[self.activegames[self.active]]
-                        else:
-                            #display cycle all
-                            self.currentGame = (self.currentGame + 1) % self.gameCount # cycle all
-                            # self.currentGame = max(1,(self.currentGame + 1) % self.gameCount) # cycle all
-                            game = self.games[self.currentGame]
-                    else: # favorite team playing this week
-                        #display favorite game
-                        game = self.games[self.favoriteGame]
-                self.DrawGame(draw,game)
-            else: # no games this week
-                self.DrawNoGames(draw)  
-        else: # no game data received
-            draw.text(( 1,  2), "No nfl data received.", font = self.font, fill='white')
+        ###################################################
+        if self.mode == 'cycle_all':
+            self.currentGame = self.next_game(self.currentGame, self.all_games)
+            print(f'cycle through all {len(self.games)} games.')
+        elif self.mode == 'cycle_favorite':
+            self.currentGame = self.next_game(self.currentGame, self.favorite_games)
+            print(f'cycle through all {len(self.favorite_games)} favorite games.')
+        elif self.mode == 'cycle_active':
+            self.currentGame = self.next_game(self.currentGame, self.active_games)
+            print(f'cycle through all {len(self.active_games)} active games.')
+        
+        if self.gameCount == 0:
+            self.DrawNoGames(draw)
+        else:
+            self.DrawGame(draw, self.games[self.currentGame])
+        ###################################################
+        # else: # no game data received
+        #     draw.text(( 1,  2), "No nfl data received.", font = self.font, fill='white')
         if self.is_paused:
             draw.line(((125,0),(125,2)), fill='White', width=1)
             draw.line(((127,0),(127,2)), fill='White', width=1)
