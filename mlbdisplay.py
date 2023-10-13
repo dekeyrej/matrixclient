@@ -109,16 +109,9 @@ class MLBDisplay(DisplayPage):
                             self.mode = 'cycle_favorite'
 
     def loadGame(self, gid):
-#         print(gid)
         if gid != -1 and gid != 99:
             self.b1 = self.b2 = self.b3 = 0 # bases are empty
-    #         print(self.TEAM_GAME)
-    #         if self.TEAM_GAME != 99:
-            if self.gameCount > 1:
-                game = self.games[gid]
-            else: 
-                game = self.games  # self.gameCount = 1
-#                 print(game)
+            game = self.games[gid]
             # for all ind in (S, P, PW, DR, DI, I, O, F, FR)
             self.home_team_abbrev = game['homeAbbreviation']
             self.homeRecord       = game['homeRecord']

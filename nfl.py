@@ -87,13 +87,13 @@ class NFLDisplay(DisplayPage):
         ###################################################
         if self.mode == 'cycle_all':
             self.currentGame = self.next_game(self.currentGame, self.all_games)
-            print(f'cycle through all {len(self.games)} games.')
+            # print(f'cycle through all {len(self.games)} games.')
         elif self.mode == 'cycle_favorite':
             self.currentGame = self.next_game(self.currentGame, self.favorite_games)
-            print(f'cycle through all {len(self.favorite_games)} favorite games.')
+            # print(f'cycle through all {len(self.favorite_games)} favorite games.')
         elif self.mode == 'cycle_active':
             self.currentGame = self.next_game(self.currentGame, self.active_games)
-            print(f'cycle through all {len(self.active_games)} active games.')
+            # print(f'cycle through all {len(self.active_games)} active games.')
         
         if self.gameCount == 0:
             self.DrawNoGames(draw)
@@ -125,11 +125,11 @@ class NFLDisplay(DisplayPage):
             lines.append("{:<3}  {:>6}    {:>4}".format(game['awayabrv'], game['awayrecord'], game['awayscore']))
             lines.append("{:<3}  {:>6}    {:>4}".format(game['homeabrv'], game['homerecord'], game['homescore']))
         
-        i = 0
-        for line in lines:
-            print(line)
-            draw.text((2, 11 * i), line, font = self.bgfont, fill=self.textColor)
-            i += 1
+        # i = 0
+        # for line in lines:
+        #     print(line)
+        #     draw.text((2, 11 * i), line, font = self.bgfont, fill=self.textColor)
+        #     i += 1
             
     def DrawNoGames(self, draw):
         draw.text((2, 1), "No NFL this week.", font = self.bgfont, fill=self.textColor)
