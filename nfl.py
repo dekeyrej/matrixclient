@@ -125,11 +125,11 @@ class NFLDisplay(DisplayPage):
             lines.append("{:<3}  {:>6}    {:>4}".format(game['awayabrv'], game['awayrecord'], game['awayscore']))
             lines.append("{:<3}  {:>6}    {:>4}".format(game['homeabrv'], game['homerecord'], game['homescore']))
         
-        # i = 0
-        # for line in lines:
-        #     print(line)
-        #     draw.text((2, 11 * i), line, font = self.bgfont, fill=self.textColor)
-        #     i += 1
+        i = 0
+        for line in lines:
+            # print(line)
+            draw.text((2, 11 * i), line, font = self.bgfont, fill=self.textColor)
+            i += 1
             
     def DrawNoGames(self, draw):
         draw.text((2, 1), "No NFL this week.", font = self.bgfont, fill=self.textColor)
