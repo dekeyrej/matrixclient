@@ -45,6 +45,11 @@
     "Frames": 1
   },
   {
+    "Page": "NFL",
+    "Time": 5,
+    "Frames": 1
+  },
+  {
     "Page": "Uptime",
     "Time": 6,
     "Frames": 1

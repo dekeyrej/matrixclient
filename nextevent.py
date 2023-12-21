@@ -40,7 +40,7 @@ class NextEvent(DisplayPage):
             self.values['values'].sort(reverse=False, key=key)
             
             count = self.values['values'][0]["nyear"] - self.values['values'][0]["year"]
-            suffix = self.suffix(count % 10)
+            suffix = self.suffix(count)
             
             self.line[0] = "{}'s".format(self.values['values'][0]['name'])
             self.line[1] = "{}{} {}".format(count, suffix, self.values['values'][0]['event'])
@@ -67,14 +67,18 @@ class NextEvent(DisplayPage):
             return self.my_canvas
     
     def suffix(self,num):
-        if num == 1:
-            return 'st'
-        elif num == 2:
-            return 'nd'
-        elif num ==3:
-            return 'rd'
-        else:
+        if 4 <= num <= 20:
             return 'th'
+        else:
+            num = num % 10
+            if num == 1:
+                return 'st'
+            elif num == 2:
+                return 'nd'
+            elif num ==3:
+                return 'rd'
+            else:
+                return 'th'
         
     def daysToNext(self,mon,day,today):
         year = today.year

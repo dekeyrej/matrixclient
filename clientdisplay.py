@@ -39,7 +39,7 @@ from mlbdisplay      import MLBDisplay
 from tracker         import GarminDisplay
 from uptime          import Uptime
 from wifi            import WiFi
-# from nfl             import NFLDisplay
+from nfl             import NFLDisplay
 # from wcdisplay       import WorldCupDisplay
 
 class Matrix(object):
@@ -74,8 +74,8 @@ class Matrix(object):
                      "tbl_name": 'feed'}
         self.dba = Database(self.secrets['dbtype'], db_params)
         if PROD == '2':  # Production
-            pass
-            # self.write_start_record()
+            # pass
+            self.write_start_record()
         # setup redis connection
         if self.secrets['rpass'][self.env] == 'None':
             self.r = redis.Redis(host=self.secrets['rhost'][self.env], port=6379, db=0, decode_responses=True)
@@ -176,7 +176,7 @@ class Matrix(object):
                 try:
                     self.commands[cmd['data']](self)
                 except KeyError:
-                    print(f"Unknown control [{cmd['data']}]")
+                    print(f"Unknown control command: [{cmd['data']}]")
             elif cmd['channel'] == 'update':
                 try:
                     displaylist = self.find_displays_by_type(cmd['data'])
@@ -186,7 +186,7 @@ class Matrix(object):
                             print(f"{cmd['data']}: {type(self.displays[display][0])}")
                             self.displays[display][0].update()
                 except KeyError:
-                    print(f"Unknown update [{cmd['data']}]")
+                    print(f"Unknown update tag: [{cmd['data']}]")
             else:
                 print(f"Unknown message [{cmd}]")
 
@@ -295,11 +295,11 @@ class Matrix(object):
         self.modules['Hourly Weather'] = HourlyWeather(db, self.matrix)
         self.modules['Forecast Weather'] = ForecastWeather(db, self.matrix)
         self.modules['Moon Display'] = MoonDisplay(db, self.matrix)
-        self.modules['MLB'] = MLBDisplay(db, self.matrix, team='BOS')
+        self.modules['MLB'] = MLBDisplay(db, self.matrix, team='')
         self.modules['Track'] = GarminDisplay(db, self.matrix)
         self.modules['Uptime'] = Uptime(db, self.matrix)
         self.modules['WiFi'] = WiFi(db, self.matrix, self.secrets['wifi_connect_string'])
-        # self.modules['NFL'] = NFLDisplay(db, self.matrix)
+        self.modules['NFL'] = NFLDisplay(db, self.matrix, team='')
         # self.modules['WC'] = WorldCupDisplay(db, self.matrix)
         ## end display classes
         
