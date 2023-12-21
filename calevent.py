@@ -27,7 +27,7 @@ class CalendarEvent(DisplayPage):
             layer += 1
         self.font = ImageFont.load(filename='fonts/5x7.pil',)
         self.calendarico = Image.open("img/calendarico.bmp")
-        self.garbage_night = '4' # '2' for Tuesday
+        self.garbage_night = '2' # for Tuesday
         
     def display(self):
         if self.data_dirty:
