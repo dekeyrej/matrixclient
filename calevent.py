@@ -27,6 +27,7 @@ class CalendarEvent(DisplayPage):
             layer += 1
         self.font = ImageFont.load(filename='fonts/5x7.pil',)
         self.calendarico = Image.open("img/calendarico.bmp")
+        self.garbage_night = '4' # '2' for Tuesday
         
     def display(self):
         if self.data_dirty:
@@ -71,13 +72,24 @@ class CalendarEvent(DisplayPage):
                                 fourthLine =    "{} AT {}".format(event[0][4:], start.format('hh:mm A'))
                                 upcoming = True
                                 break
-                                
+
+                    ### arrow.format('d') returns '1','2','3',..'7', where '1' = Monday
                     if not upcoming and not active:
-                        color = "Green"
-                        top_line =     "NO MORE MEETINGS :)"
+                        if t.format('d') != self.garbage_night:
+                            color = "Green"
+                            top_line =     "NO MORE MEETINGS :)"
+                        else:
+                            color = "Red"
+                            top_line   =     "!!!!!!!!!!!!!!!!!!!!!!!!!"
+                            fourthLine =     "GARBAGE NIGHT!!!"
                 else: # count == 0
-                    color = "Blue"
-                    top_line =     "NO MEETINGS TODAY!!"
+                    if t.format('d') != self.garbage_night:
+                        color = "Blue"
+                        top_line =     "NO MEETINGS TODAY!!"
+                    else:
+                        color = "Red"
+                        top_line   =     "!!!!!!!!!!!!!!!!!!!!!!!!!"
+                        fourthLine =     "GARBAGE NIGHT"
                 #---------------------------------------------------------------
                 draw.rectangle([(0,24),(127,63)],fill=color, outline=color,width=1)
                 self.icon.paste(self.calendarico, box=(1,0))
