@@ -12,7 +12,7 @@ def read_secrets(path):
 secrets = read_secrets("../secrets.json")
 DBHOST = 'rocket3'
 DBPORT = 5432
-db_params = {"user": secrets['dbuser'], "pass": secrets['dbpass'], "host": DBHOST, "port":  DBPORT, "db_name": 'matrix', "tbl_name": 'feed'}
+db_params = {"user": secrets['dbuser'], "pass": secrets['dbpass'], "host": secrets['dbhost']['prod'], "port":  secrets['dbport']['prod'], "db_name": 'matrix', "tbl_name": 'feed'}
 db = Database('postgres', db_params)
 
 def saveDisplayConfig(db, cv):
