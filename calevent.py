@@ -4,6 +4,7 @@ from PIL import Image, ImageFont, ImageDraw
 from pages.displaypage import DisplayPage
 import sys
 import os
+cwd = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/rpi-rgb-led-matrix/bindings/python'))
 
 class CalendarEvent(DisplayPage):
@@ -17,7 +18,14 @@ class CalendarEvent(DisplayPage):
         self.type = 'Calendar'
         self.values = []
         self.icon = None
-        self.font = ImageFont.load(r'fonts/5x7.pil')
+        print(os.getcwd())
+        print(os.listdir())
+        layer = 1
+        w = os.walk('/home/pi/matrixclient/fonts')
+        for (dirpath, dirnames, filenames) in w:
+            print(filenames)
+            layer += 1
+        self.font = ImageFont.load(filename='fonts/5x7.pil',)
         self.calendarico = Image.open("img/calendarico.bmp")
         
     def display(self):

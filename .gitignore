@@ -8,3 +8,4 @@ secrets.json
 matrix.service
 mc.sh
 rpi-rgb-led-matrix
+my-pi-temp.sh
