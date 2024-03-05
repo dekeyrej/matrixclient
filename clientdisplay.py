@@ -295,7 +295,7 @@ class Matrix(object):
         self.modules['Hourly Weather'] = HourlyWeather(db, self.matrix)
         self.modules['Forecast Weather'] = ForecastWeather(db, self.matrix)
         self.modules['Moon Display'] = MoonDisplay(db, self.matrix)
-        self.modules['MLB'] = MLBDisplay(db, self.matrix, team='')
+        self.modules['MLB'] = MLBDisplay(db, self.matrix, team='BOS')
         self.modules['Track'] = GarminDisplay(db, self.matrix)
         self.modules['Uptime'] = Uptime(db, self.matrix)
         self.modules['WiFi'] = WiFi(db, self.matrix, self.secrets['wifi_connect_string'])
