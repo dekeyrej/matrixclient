@@ -144,6 +144,9 @@ class Matrix(object):
             if self.matrix is not None:
                 offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
 
+    def garbage_out(self):
+        self.modules['Weekly Calendar'].garbage_out(True)
+
     ## forces a reload of the display configuration
     def reload_displays(self):
         # action to take on redis-delivered command 'reload'
@@ -151,7 +154,7 @@ class Matrix(object):
         self.buildDisplays()
 
     ## list of command names and the associated subroutines
-    commands = {'reload': reload_displays, 'pp': playPause, 'rew': back_step, 'fwd': forward_step}
+    commands = {'reload': reload_displays, 'pp': playPause, 'rew': back_step, 'fwd': forward_step, 'out': garbage_out}
 
     ## find the display(s) concerned with a particular 'rectype'
     def find_displays_by_type(self,tag):

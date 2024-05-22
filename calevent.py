@@ -28,7 +28,11 @@ class CalendarEvent(DisplayPage):
         self.font = ImageFont.load(filename='fonts/5x7.pil',)
         self.calendarico = Image.open("img/calendarico.bmp")
         self.garbage_night = '2' # for Tuesday
+        self.is_garbage_out = False
         
+    def garbage_out(self, state):
+        self.is_garbage_out = state
+    
     def display(self):
         if self.data_dirty:
             self.icon = Image.new("RGB", (128,64))
@@ -76,20 +80,30 @@ class CalendarEvent(DisplayPage):
                     ### arrow.format('d') returns '1','2','3',..'7', where '1' = Monday
                     if not upcoming and not active:
                         if t.format('d') != self.garbage_night:
+                            self.is_garbage_out = False
                             color = "Green"
                             top_line =     "NO MORE MEETINGS :)"
                         else:
-                            color = "Red"
-                            top_line   =     "!!!!!!!!!!!!!!!!!!!!!!!!!"
-                            fourthLine =     "GARBAGE NIGHT!!!"
+                            if self.is_garbage_out == False:
+                                color = "Red"
+                                top_line   =     "!!!!!!!!!!!!!!!!!!!!!!!!!"
+                                fourthLine =     "GARBAGE NIGHT!!!"
+                            else:
+                                color = "Green"
+                                top_line =     "NO MORE MEETINGS :)"
                 else: # count == 0
                     if t.format('d') != self.garbage_night:
+                        self.is_garbage_out = False
                         color = "Blue"
                         top_line =     "NO MEETINGS TODAY!!"
                     else:
-                        color = "Red"
-                        top_line   =     "!!!!!!!!!!!!!!!!!!!!!!!!!"
-                        fourthLine =     "GARBAGE NIGHT"
+                            if self.is_garbage_out == False:
+                                color = "Red"
+                                top_line   =     "!!!!!!!!!!!!!!!!!!!!!!!!!"
+                                fourthLine =     "GARBAGE NIGHT!!!"
+                            else:
+                                color = "Blue"
+                                top_line =     "NO MEETINGS TODAY!!"
                 #---------------------------------------------------------------
                 draw.rectangle([(0,24),(127,63)],fill=color, outline=color,width=1)
                 self.icon.paste(self.calendarico, box=(1,0))
