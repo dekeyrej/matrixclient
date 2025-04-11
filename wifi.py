@@ -41,6 +41,7 @@ class WiFi(DisplayPage):
         qr.add_data(wifi_connect_string,optimize=20)
         qr.make(fit=True)
         qrc = qr.make_image(fill_color="white", back_color="black")
+        qrc = qrc.convert("RGB")  # required change based on the qrcode or PIL library version
         logo = Image.open("img/wifi-logo.bmp")
         icon = Image.new("RGB", (128,64))
         icon.paste(qrc, box=(11,11))
