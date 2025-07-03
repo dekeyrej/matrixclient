@@ -1,5 +1,5 @@
 __pycache__/
-.venv/
+venv/
 img/
 Do_Not_Copy/
 static/*.bmp
