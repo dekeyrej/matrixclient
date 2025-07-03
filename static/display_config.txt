@@ -42,12 +42,7 @@
   {
     "Page": "MLB",
     "Time": 6,
-    "Frames": 1
-  },
-  {
-    "Page": "NFL",
-    "Time": 5,
-    "Frames": 1
+    "Frames": 3
   },
   {
     "Page": "Uptime",
