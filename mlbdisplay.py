@@ -1,6 +1,7 @@
 import arrow
 from PIL import Image, ImageFont, ImageDraw
-from plain_pages.displaypage import DisplayPage
+from rgbleddisplay import RGBLEDDisplay
+import logging
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/rpi-rgb-led-matrix/bindings/python'))
@@ -8,7 +9,7 @@ sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/rpi-rgb-led-matrix
 from team_colors import TeamColors
 import textwrap
 
-class MLBDisplay(DisplayPage):
+class MLBDisplay(RGBLEDDisplay):
     
 #     dows = ("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN")
 #     mons = ("NAM", "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC")
@@ -17,26 +18,26 @@ class MLBDisplay(DisplayPage):
 #             "7" : 31, "8" : 31, "9" : 30,
 #             "10": 31, "11": 30, "12": 31}
     
-    sj = None                  # json results from query (contains data for all of the day's games)
+    # sj = None                  # json results from query (contains data for all of the day's games)
     
-    home_team_abbrev = ""      # 2/3 letter abbreviation of the home team
-    away_team_abbrev = ""      # 2/3 letter abbreviation of the away team
-    home_win = ""              # for scheduled games, # of wins for the home team this season
-    home_loss = ""             # for scheduled games, # of losses for the home team this season
-    away_win = ""              # for scheduled games, # of wins for the away team this season
-    away_loss = ""             # for scheduled games, # of losses for the away team this season
-    start_time = ""            # 12-hour formatted string (h:mm, or hh:mm) for the start time of a game
-    ampm = ""                  # AM/PM of start time
-    time_zone = ""             # time zone of the start time (seems to be localized)
+    # home_team_abbrev = ""      # 2/3 letter abbreviation of the home team
+    # away_team_abbrev = ""      # 2/3 letter abbreviation of the away team
+    # home_win = ""              # for scheduled games, # of wins for the home team this season
+    # home_loss = ""             # for scheduled games, # of losses for the home team this season
+    # away_win = ""              # for scheduled games, # of wins for the away team this season
+    # away_loss = ""             # for scheduled games, # of losses for the away team this season
+    # start_time = ""            # 12-hour formatted string (h:mm, or hh:mm) for the start time of a game
+    # ampm = ""                  # AM/PM of start time
+    # time_zone = ""             # time zone of the start time (seems to be localized)
     
-    favoriteInProgress = False # if favorite team's game is I or IR
-    ind = ""                   # code that indicates the status of the game (S, P, PW), (I, IR), (O, F, FR, DI, DR))
-    inning = 0                 # current inning
-    inning_state = ""          # Top, Middle, Bottom, End
-    home_runs = ""             # current score (number of runs) of the home team.
-    away_runs = ""             # current score (number of runs) of the away team. #, home_hits, away_hits, home_err, away_err, last_play, runners, runners_text, sprite,
-    outs = 0                   # number of outs recorded recorded in the current half-inning
-    b1 = b2 = b3 = 0           # base (1st, 2nd, 3rd) is unoccupied (=0) or occupied (=1)
+    # favoriteInProgress = False # if favorite team's game is I or IR
+    # ind = ""                   # code that indicates the status of the game (S, P, PW), (I, IR), (O, F, FR, DI, DR))
+    # inning = 0                 # current inning
+    # inning_state = ""          # Top, Middle, Bottom, End
+    # home_runs = ""             # current score (number of runs) of the home team.
+    # away_runs = ""             # current score (number of runs) of the away team. #, home_hits, away_hits, home_err, away_err, last_play, runners, runners_text, sprite,
+    # outs = 0                   # number of outs recorded recorded in the current half-inning
+    # b1 = b2 = b3 = 0           # base (1st, 2nd, 3rd) is unoccupied (=0) or occupied (=1)
     balls = ""                 # number of balls against the current batter
     strikes = ""               # number of strikes against the current batter
     
@@ -47,11 +48,11 @@ class MLBDisplay(DisplayPage):
     batter_text = ""           # current batter
     last_play = ""
     teamLogos = {}             # dictionary of images (16x14 pixels) of the teams' logos
-    icon = None
+    # icon = None
 
 
-    def __init__(self, dba, matrix=None, team='', strict=False):
-        super().__init__(dba, matrix)
+    def __init__(self, matrix=None, team='', strict=False):
+        super().__init__(matrix=matrix)
         if matrix is not None:
             from rgbmatrix import RGBMatrix
             self.matrix = True
@@ -70,8 +71,9 @@ class MLBDisplay(DisplayPage):
         self.output = False
         self.mode = 'cycle_all'
 
-    def update(self):
-        self.values = self.dba.read(self.type)
+    def update(self, update_data): # overridden for dual data types
+        if update_data['type'] == self.type:
+            self.values = update_data
         if self.values:
             self.mode = 'cycle_all'
             self.games = self.values['values']
@@ -119,7 +121,7 @@ class MLBDisplay(DisplayPage):
             self.away_team_abbrev = game['awayAbbreviation']
             self.awayRecord       = game['awayRecord']
             self.awayColor        = self.hexToTuple(game['awayColor'])
-            start_time            = arrow.get(self.fix_edt(game["startTime"]),'MM/DD/YYYY h:mm A ZZZ')
+            start_time            = arrow.get(game["startTime"],'MM/DD/YYYY h:mm A Z')
             self.start_time       = start_time.format('ddd MM/DD h:mm A')
             self.short_date       = start_time.format('MM/DD/YY')
             # self.start_time       = arrow.get(self.fix_edt(game["startTime"]),'MM/DD/YYYY h:mm A ZZZ').format('h:mm A')
@@ -147,8 +149,8 @@ class MLBDisplay(DisplayPage):
             else:
                 pass
             
-    def hexToTuple(self,h):
-        return (int(h[0:2], 16),int(h[2:4], 16),int(h[4:6], 16))
+    # def hexToTuple(self,h):
+    #     return (int(h[0:2], 16),int(h[2:4], 16),int(h[4:6], 16))
     
     def next_game(self, id: int , gamelist: list[int]) -> int:
         if id in gamelist: 

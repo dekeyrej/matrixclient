@@ -3,21 +3,22 @@ import json
 import arrow
 from PIL import Image, ImageFont, ImageDraw
 import textwrap
-from plain_pages.displaypage import DisplayPage
+from rgbleddisplay import RGBLEDDisplay
+import logging
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/rpi-rgb-led-matrix/bindings/python'))
 # from rgbmatrix import RGBMatrix
 
-class NFLDisplay(DisplayPage):
-    def __init__(self, dba, matrix=None, team='', strict=False):
-        super().__init__(dba, matrix)
+class NFLDisplay(RGBLEDDisplay):
+    def __init__(self, matrix=None, team='', strict=False):
+        super().__init__(matrix=matrix)
         if matrix is not None:
             from rgbmatrix import RGBMatrix
             self.matrix = True
         else:
             self.matrix = False
-        self.dba = dba
+        # self.dba = dba
         self.type = 'NFL'
         self.currentGame = 0
         self.gameCount = 0
@@ -33,15 +34,15 @@ class NFLDisplay(DisplayPage):
         self.active_games = []
         self.favorite_games = []
         self.output = False
-        
-              
-    def update(self):
-        self.values = self.dba.read(self.type)
+                
+    def update(self, update_data): # overridden for dual data types
+        if update_data['type'] == self.type:
+            self.values = update_data
         if self.values['values']:
-            self.games = self.values['values']
+            self.games = self.values['values']['events']
             self.all_games = list(range(len(self.games)))
             self.active_games = []
-            self.favortite_games = []
+            self.favorite_games = []
             self.mode = 'cycle_all'
             # self.active = 0
             self.favoriteGame = ""

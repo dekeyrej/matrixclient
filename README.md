@@ -1,7 +1,6 @@
-# matrixclient #
+# matrixclient
 
 *Prerequisites*
-
 
 *Install rpi-rgb-led-matrix*
 - clone it from https://github.com/hzeller/rpi-rgb-led-matrix.git
@@ -19,13 +18,12 @@
 - pip install -r requirements.txt
 
 *Setup the execution environment*
-- copy sample.env to .env and edit with your values ('ENC_SECRETS_PATH' is not currently used)
 - copy sample_mc.sh mc.sh and edit 'DIR' for your current directory
 - chmod +x mc.sh
 - chmod 777 static/
 
-*Setup your secrets*
-- copy sample_secrets.json to secrets.json
+*Setup your configuration/secrets*
+- copy sample_config.py to config.json
 - edit with your values
 
 *Test the setup*
@@ -37,6 +35,3 @@
 - copy matrix.service to /etc/systemd/system
 - sudo systemctl enable matrix
 - sudo systemctl start matrix
-
-*Notes*
-- (if you want to reencrypt your values in mysecrets.py)
