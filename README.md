@@ -1,4 +1,35 @@
-# matrixclient
+# MatrixClient
+
+## 📌 Intro
+
+A modular display driver for RGB LED matrices, powered by real-time data streamed from an SSE-capable API server. Designed for external operation—no Redis or Postgres access required. Built to elegantly render environmental info, sports updates, system status, and more.
+
+Inspired by years of ambient data visualization and play-by-play commentary à la NESN.
+
+
+## 🧠 Features
+
+- Class-based architecture with internal state control
+- SSE subscription for real-time updates and remote control (`webcontrol` messages)
+- Modular display logic with support for cycling and pausing
+- RGB LED matrix rendering using `rpi-rgb-led-matrix`
+- Ready-to-run with systemd service integration
+
+## 🔄 WebControl Commands
+
+Via SSE stream, matrixclient responds to the following commands:
+
+| Command | Action                       |
+|---------|------------------------------|
+| `pp`    | Toggle play/pause cycle      |
+| `fwd`   | Advance to next display      |
+| `rew`   | Revert to previous display   |
+| `out`   | Mark garbage as taken out    |
+
+
+## 🏷️ **SSE-powered. Redis-free. Built for real-time elegance.**
+
+### Installation
 
 *Prerequisites*
 
