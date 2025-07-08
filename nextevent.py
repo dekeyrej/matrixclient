@@ -1,16 +1,15 @@
 from PIL import Image, ImageFont, ImageDraw
 import json
 import arrow
-from plain_pages.displaypage import DisplayPage
-
+from rgbleddisplay import RGBLEDDisplay
+import logging
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/rpi-rgb-led-matrix/bindings/python'))
 
-class NextEvent(DisplayPage):
-    
-    def __init__(self, dba, matrix=None):
-        super().__init__(dba, matrix)
+class NextEvent(RGBLEDDisplay):
+    def __init__(self, matrix=None):
+        super().__init__(matrix=matrix)
         if matrix is not None:
             from rgbmatrix import RGBMatrix
             self.matrix = True

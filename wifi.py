@@ -1,12 +1,13 @@
 import arrow
 from PIL import Image, ImageDraw
 import qrcode
-from plain_pages.displaypage import DisplayPage
+from rgbleddisplay import RGBLEDDisplay
+import logging
 
-class WiFi(DisplayPage):
-    
-    def __init__(self, dba, matrix, connect_str):
-        super().__init__(dba, matrix)
+class WiFi(RGBLEDDisplay):
+
+    def __init__(self, matrix, connect_str):
+        super().__init__(matrix=matrix)
         if matrix is not None:
             self.matrix = True
         else:
@@ -25,7 +26,7 @@ class WiFi(DisplayPage):
                 draw = ImageDraw.Draw(self.icon)
                 draw.line(((125,0),(125,2)), fill='White', width=1)
                 draw.line(((127,0),(127,2)), fill='White', width=1)
-            # self.icon.save("static/wifi.bmp", "BMP")
+            self.icon.save("static/wifi.bmp", "BMP")
         if self.matrix:
             self.my_canvas.Clear()
             self.my_canvas.SetImage(self.icon,0,0)

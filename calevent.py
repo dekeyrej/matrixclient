@@ -1,25 +1,26 @@
 import arrow
 import json
 from PIL import Image, ImageFont, ImageDraw
-from plain_pages.displaypage import DisplayPage
+from rgbleddisplay import RGBLEDDisplay
+import logging
 import sys
 import os
 cwd = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/rpi-rgb-led-matrix/bindings/python'))
 
-class CalendarEvent(DisplayPage):
-    def __init__(self,dba,matrix=None):
-        super().__init__(dba,matrix)
+class CalendarEvent(RGBLEDDisplay):
+    def __init__(self, matrix=None):
+        super().__init__(matrix=matrix)
         if matrix is not None:
             from rgbmatrix import RGBMatrix
             self.matrix = True
         else:
             self.matrix = False
         self.type = 'Calendar'
-        self.values = []
+        # self.values = []
         self.icon = None
-        print(os.getcwd())
-        print(os.listdir())
+        # print(os.getcwd())
+        # print(os.listdir())
         layer = 1
         w = os.walk('/home/pi/matrixclient/fonts')
         for (dirpath, dirnames, filenames) in w:
@@ -46,7 +47,7 @@ class CalendarEvent(DisplayPage):
             count = len(self.values['values'])
             active = False   # true if a meeting is currently in progress
             upcoming = False # true if there is another meeting upcoming today
-            if count > 0:
+            if count > 0 and self.values['values'] != ["No events"]:
                 for event in self.values['values']:
                     start = self.stringToTime(event[1])
                     end   = self.stringToTime(event[2])

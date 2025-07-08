@@ -1,27 +1,22 @@
 from PIL import Image, ImageFont, ImageDraw
-from plain_pages.displaypage import DisplayPage
+from rgbleddisplay import RGBLEDDisplay
+import logging
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/rpi-rgb-led-matrix/bindings/python'))
 
-class HourlyWeather(DisplayPage):
-    def __init__(self, dba, matrix=None):
-        super().__init__(dba, matrix)
+class HourlyWeather(RGBLEDDisplay):
+    def __init__(self, matrix=None):
+        super().__init__(matrix=matrix)
         if matrix is not None:
             from rgbmatrix import RGBMatrix
             self.matrix = True
         else:
             self.matrix = False
-        # self.event = 'weather_event'
-        # self.no_event = 'no_weather_event'
-        # self.values = None
         self.type = 'Weather'
         self.font = ImageFont.load(r'fonts/5x7.pil')
         self.weatherfont = ImageFont.truetype(r'fonts/owfont-regular.ttf', 20)
         self.icon = None
-        
-    # def update(self,data):
-    #     self.values = data["hourly"]
 
     def display(self):
         if self.data_dirty:
