@@ -30,9 +30,7 @@ class Uptime(RGBLEDDisplay):
     def check(self, now):
         pass
 
-    # maybe switch these two? using update_server for the bulk upload and update for the single updates?
-    # would but Client in the key_map, simplifying the update logic
-    def update_server(self, update_data):
+    def update(self, update_data):
         logging.info(f"Update received for {update_data['type']}: {update_data}")
         if update_data['type'] == self.type:
             self.values = update_data
@@ -44,7 +42,7 @@ class Uptime(RGBLEDDisplay):
             logging.warning(f"Update data type {update_data['type']} does not match display type {self.type}")
         self.data_dirty = True  # set to true so we redraw the display
 
-    def update(self, update_data):
+    def update_server(self, update_data):
         """ Bulk upload of current server uptime data. """
         logging.debug(f"Bulk update received for server uptime: {update_data}")
         for update in update_data:

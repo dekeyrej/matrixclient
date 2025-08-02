@@ -108,7 +108,15 @@ class ClientDisplay:
             "Moon": [self.modules['Moon Display']],
             "Calendar": [self.modules['Weekly Calendar']],
             "NFL": [self.modules['NFL']],
-            "Weather": [self.modules['Current Weather'], self.modules['Hourly Weather'], self.modules['Forecast Weather']]
+            "Weather": [self.modules['Current Weather'], self.modules['Hourly Weather'], self.modules['Forecast Weather']],
+            "AQI-Server": [self.modules['Uptime']],
+            "Events-Server": [self.modules['Uptime']],
+            "Track-Server": [self.modules['Uptime']],
+            "MLB-Server": [self.modules['Uptime']],
+            "Moon-Server": [self.modules['Uptime']],
+            "Calendar-Server": [self.modules['Uptime']],
+            "NFL-Server": [self.modules['Uptime']],
+            "Weather-Server": [self.modules['Uptime']]
         }
 
     def fetch_initial_state(self) -> None:
@@ -146,7 +154,7 @@ class ClientDisplay:
             else:
                 logging.error(f"Failed to fetch initial state for {key}.")
         logging.debug(f"uptime_keys: {json.dumps(server_update, indent=2)}")
-        self.modules['Uptime'].update(server_update)
+        self.modules['Uptime'].update_server(server_update)
         self.modules['Uptime'].display()
 
     def playPause(self):
@@ -184,16 +192,16 @@ class ClientDisplay:
 
     async def handle_update(self, update):
         updatetype = update.get("type")
-        if updatetype in self.keys:
+        if updatetype in self.keys or updatetype in self.uptime_keys:
             for module in self.key_map.get(update['type'], []):
                 logging.debug(f"Updating module {module} with update: {update}")
                 module.update(update)
                 module.display()
             logging.info(f"Update for {updatetype} received:") 
             logging.debug(f"Update received: {update}")
-        elif updatetype in self.uptime_keys:
-            self.modules['Uptime'].update_server(update)
-            self.modules['Uptime'].display()
+        # elif updatetype in self.uptime_keys:
+        #     self.modules['Uptime'].update(update)
+        #     self.modules['Uptime'].display()
         elif updatetype == "webcontrol":
             logging.info(f"Web control command ({update.get('command')}) received.")
             self.handle_webcontrol(update.get('command'))
