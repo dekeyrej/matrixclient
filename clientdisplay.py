@@ -3,6 +3,7 @@ step 4 of the Redis-first chain. This process requests the initial state from ap
 estblishes an SSE connection to api.py, and listens for updates - dumping them as they come in.
 """
 import json
+import yaml
 import logging
 import asyncio
 import aiohttp
@@ -39,19 +40,18 @@ class ClientDisplay:
         self.key_map = {}
         self.matrix = None
 
-    def load_display_config(self):
-        return [
-            { "Page": "Clock", "Time": 5, "Frames": 5 },
-            { "Page": "WiFi", "Time": 5, "Frames": 1 },
-            { "Page": "Weekly Calendar", "Time": 5, "Frames": 1 },
-            { "Page": "Next Family Event", "Time": 5, "Frames": 1 },
-            { "Page": "Current Weather", "Time": 6, "Frames": 1 },
-            { "Page": "Hourly Weather", "Time": 6, "Frames": 1 },
-            { "Page": "Forecast Weather", "Time": 6, "Frames": 1 },
-            { "Page": "Moon Display", "Time": 5, "Frames": 5 },
-            { "Page": "MLB", "Time": 6, "Frames": 3 },
-            { "Page": "Uptime", "Time": 6, "Frames": 1 }
-            ]
+    def load_display_config(self, filepath):
+        """
+        Load the display configuration from a YAML file.
+        """
+        try:
+            with open(filepath, 'r') as file:
+                config = yaml.safe_load(file)
+                logging.debug(f"Display configuration loaded: {config}")
+                return config
+        except Exception as e:
+            logging.error(f"Error loading display configuration: {e}")
+            return []
 
     def buildModules(self):
         """
@@ -287,7 +287,7 @@ class ClientDisplay:
 
         self.modules = self.buildModules()                                # instantiates display page modules
         self.key_map = self.buildKeyMap()                                 # map message type to modules
-        self.display_config = self.load_display_config()                  # hack to load display config (should be from file)
+        self.display_config = self.load_display_config(Config['DISPLAY_CONFIG'])
         self.displays, self.displayCount, self.display = self.buildDisplays() # builds array of display objects, how long to display them, and how many frames they can display
         self.fetch_initial_state()                                        # fetch initial state from API
 

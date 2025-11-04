@@ -1,0 +1,30 @@
+- Page: Clock
+  Time: 5
+  Frames: 5
+- Page: WiFi
+  Time: 5
+  Frames: 1
+- Page: Weekly Calendar
+  Time: 5
+  Frames: 1
+- Page: Next Family Event
+  Time: 5
+  Frames: 1
+- Page: Current Weather
+  Time: 6
+  Frames: 1
+- Page: Hourly Weather
+  Time: 6
+  Frames: 1
+- Page: Forecast Weather
+  Time: 6
+  Frames: 1
+- Page: Moon Display
+  Time: 5
+  Frames: 5
+- Page: NFL
+  Time: 6
+  Frames: 3
+- Page: Uptime
+  Time: 6
+  Frames: 1
