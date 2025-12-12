@@ -246,6 +246,10 @@ class ClientDisplay:
             logging.info("'Garbage has been taken out' command received.")
             self.modules['Weekly Calendar'].garbage_out(True)
             self.modules['Weekly Calendar'].data_dirty = True
+        elif command == "reload":
+            logging.info("Reloading display configuration.")
+            self.display_config = self.load_display_config(Config['DISPLAY_CONFIG'])
+            self.displays, self.displayCount, self.display = self.buildDisplays()
         else:
             logging.warning(f"Unknown web control command: {command}")
 
