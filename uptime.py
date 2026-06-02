@@ -90,7 +90,7 @@ class Uptime(RGBLEDDisplay):
             else:
                 col = 1
             # print(self.server_stats[s])
-            server_start_time = arrow.get(self.server_stats[s],'MM/DD/YYYY h:mm A Z')
+            server_start_time = arrow.get(self.server_stats[s],'MM/DD/YYYY h:mm:ss A Z')
             color = self.uptime_color(tnow, server_start_time)
             # print(f'{s}: {color} -- row: {row}, col: {col} -- top left x, y: {(col * 64) + 10}, {(row * 8) + 33}')
             draw.rectangle([((col * 64) + 1,(row * 8) + 33),((col * 64) + 7,(row * 8) + 39)],fill=color,outline=color,width=1)

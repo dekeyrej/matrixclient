@@ -130,7 +130,7 @@ class ClientDisplay:
                 update = {
                     'type': key,
                     'updated': initial_state.get('updated'),
-                    'valid': initial_state.get('valid'),
+                    # 'valid': initial_state.get('valid'),
                     'values': initial_state.get('values')
                 }
                 for module in self.key_map.get(key, []):

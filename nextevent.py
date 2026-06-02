@@ -28,7 +28,7 @@ class NextEvent(RGBLEDDisplay):
             self.icon = Image.new("RGB", (128,64))
             # today = arrow.now().shift(days=+2)  # to forward test
             today = arrow.now()
-            self.tz = today.format('ZZZ') # extract local timezone
+            self.tz = today.format('ZZ') # extract local timezone
             for e in self.values['values']:
                 days, nextYear = self.daysToNext(e["month"],e["day"],today)
                 e.update({'days'  : days})
