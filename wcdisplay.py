@@ -57,7 +57,7 @@ class WorldCupDisplay(DisplayPage):
         if self.is_paused:
             draw.line(((125,0),(125,2)), fill='White', width=1)
             draw.line(((127,0),(127,2)), fill='White', width=1)
-        self.icon.save("static/thumb.bmp", "BMP")
+        self.icon.save("static/wc.bmp", "BMP")
         if self.matrix:
             self.my_canvas.Clear()
             self.my_canvas.SetImage(self.icon,0,0)
@@ -84,8 +84,8 @@ class WorldCupDisplay(DisplayPage):
         draw.rectangle([(0, 9),(49, 42)], outline=(63,63,63),width=1)
         draw.rectangle([(78,9),(127,42)], outline=(63,63,63),width=1)
         # Display Team Logos
-        homelogo = Image.open("img/wc/{}.bmp".format(game['home_flag']))
-        awaylogo = Image.open("img/wc/{}.bmp".format(game['away_flag']))
+        homelogo = Image.open(f"img/wc/{game['home_flag']}.bmp")
+        awaylogo = Image.open(f"img/wc/{game['away_flag']}.bmp")
         self.icon.paste(homelogo, box=(1, 10))
         self.icon.paste(awaylogo, box=(79,10))
         # Display Team (country) Names
