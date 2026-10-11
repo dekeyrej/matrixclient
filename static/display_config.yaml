@@ -1,9 +1,9 @@
 - Page: Clock
   Time: 5
   Frames: 5
-- Page: WiFi
-  Time: 5
-  Frames: 1
+# - Page: WiFi
+#   Time: 5
+#   Frames: 1
 - Page: Weekly Calendar
   Time: 5
   Frames: 1
@@ -22,9 +22,12 @@
 - Page: Moon Display
   Time: 5
   Frames: 5
-- Page: NFL
+- Page: MLB
   Time: 6
   Frames: 3
+# - Page: NFL
+#   Time: 6
+#   Frames: 3
 - Page: Uptime
   Time: 6
   Frames: 1

@@ -109,14 +109,14 @@ class ClientDisplay:
             "Calendar": [self.modules['Weekly Calendar']],
             "NFL": [self.modules['NFL']],
             "Weather": [self.modules['Current Weather'], self.modules['Hourly Weather'], self.modules['Forecast Weather']],
-            "AQI-Server": [self.modules['Uptime']],
-            "Events-Server": [self.modules['Uptime']],
-            "Track-Server": [self.modules['Uptime']],
-            "MLB-Server": [self.modules['Uptime']],
-            "Moon-Server": [self.modules['Uptime']],
-            "Calendar-Server": [self.modules['Uptime']],
-            "NFL-Server": [self.modules['Uptime']],
-            "Weather-Server": [self.modules['Uptime']]
+            "AQI": [self.modules['Uptime']],
+            "Events": [self.modules['Uptime']],
+            "Track": [self.modules['Uptime']],
+            "MLB": [self.modules['Uptime']],
+            "Moon": [self.modules['Uptime']],
+            "Calendar": [self.modules['Uptime']],
+            "NFL": [self.modules['Uptime']],
+            "Weather": [self.modules['Uptime']]
         }
 
     def fetch_initial_state(self) -> None:
@@ -144,13 +144,14 @@ class ClientDisplay:
         """
         server_update = {}
         for key in self.uptime_keys:
-            response = requests.get(f"{Config['API_URL']}/{key}")
+            response = requests.get(f"{Config['API_URL']}/{key}/server")
             if response.status_code == 200:
                 initial_state = response.json()
                 if initial_state is not None and 'updated' in initial_state:
-                    new_key = key.removesuffix('-Server')
-                    server_update[new_key] = initial_state.get('updated')
-                    logging.debug(f"Initial state for {key}:", server_update[new_key])
+                    # new_key = key.removesuffix('-Server')
+                    # server_update[new_key] = initial_state.get('updated')
+                    server_update[key] = initial_state.get('updated')
+                    logging.debug(f"Initial state for {key}:", server_update[key])
             else:
                 logging.error(f"Failed to fetch initial state for {key}.")
         logging.debug(f"uptime_keys: {json.dumps(server_update, indent=2)}")
@@ -199,9 +200,9 @@ class ClientDisplay:
                 module.display()
             logging.info(f"Update for {updatetype} received:") 
             logging.debug(f"Update received: {update}")
-        # elif updatetype in self.uptime_keys:
-        #     self.modules['Uptime'].update(update)
-        #     self.modules['Uptime'].display()
+        elif updatetype in self.uptime_keys:
+            self.modules['Uptime'].update(update)
+            self.modules['Uptime'].display()
         elif updatetype == "webcontrol":
             logging.info(f"Web control command ({update.get('command')}) received.")
             self.handle_webcontrol(update.get('command'))

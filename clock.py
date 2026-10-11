@@ -2,15 +2,15 @@ import arrow
 from PIL import Image, ImageFont, ImageDraw
 from rgbleddisplay import RGBLEDDisplay
 import logging
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/rpi-rgb-led-matrix/bindings/python'))
+# import sys
+# import os
+# sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/rpi-rgb-led-matrix/bindings/python'))
 
 class Clock(RGBLEDDisplay):
     def __init__(self, matrix=None, seconds=False):
         super().__init__(matrix=matrix)
         if matrix is not None:
-            from rgbmatrix import RGBMatrix
+            # from rgbmatrix import RGBMatrix
             self.matrix = True
         else:
             self.matrix = False

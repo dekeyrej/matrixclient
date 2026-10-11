@@ -4,15 +4,11 @@ from PIL import Image, ImageFont, ImageDraw
 import re
 from rgbleddisplay import RGBLEDDisplay
 import logging
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/rpi-rgb-led-matrix/bindings/python'))
 
 class Uptime(RGBLEDDisplay):
     def __init__(self, matrix=None):
         super().__init__(matrix=matrix)
         if matrix is not None:
-            from rgbmatrix import RGBMatrix
             self.matrix = True
         else:
             self.matrix = False
@@ -24,7 +20,6 @@ class Uptime(RGBLEDDisplay):
         self.values = {
             'type': 'Client', 
             'updated': f"{tnow.to('America/New_York').format('MM/DD/YYYY h:mm A Z')}", 
-            'valid': f"{tnow.to('America/New_York').format('MM/DD/YYYY h:mm A Z')}", 
             'values': {'some':'stuff'}}
 
     def check(self, now):

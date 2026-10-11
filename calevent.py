@@ -4,15 +4,15 @@ from PIL import Image, ImageFont, ImageDraw
 from rgbleddisplay import RGBLEDDisplay
 import logging
 import sys
-import os
-cwd = os.path.abspath(os.path.dirname(__file__))
-sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/rpi-rgb-led-matrix/bindings/python'))
+# import os
+# cwd = os.path.abspath(os.path.dirname(__file__))
+# sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/rpi-rgb-led-matrix/bindings/python'))
 
 class CalendarEvent(RGBLEDDisplay):
     def __init__(self, matrix=None):
         super().__init__(matrix=matrix)
         if matrix is not None:
-            from rgbmatrix import RGBMatrix
+            # from rgbmatrix import RGBMatrix
             self.matrix = True
         else:
             self.matrix = False
@@ -21,11 +21,11 @@ class CalendarEvent(RGBLEDDisplay):
         self.icon = None
         # print(os.getcwd())
         # print(os.listdir())
-        layer = 1
-        w = os.walk('/home/pi/matrixclient/fonts')
-        for (dirpath, dirnames, filenames) in w:
-            print(filenames)
-            layer += 1
+            # layer = 1
+            # w = os.walk('/home/pi/matrixclient/fonts')
+            # for (dirpath, dirnames, filenames) in w:
+            #     print(filenames)
+            #     layer += 1
         self.font = ImageFont.load(filename='fonts/5x7.pil',)
         self.calendarico = Image.open("img/calendarico.bmp")
         self.garbage_night = '2' # for Tuesday

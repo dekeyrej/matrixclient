@@ -30,11 +30,12 @@ Via SSE stream, matrixclient responds to the following commands:
 ## Setup
 
 *Prerequisites*
+- sudo apt-get install python-dev-is-python3 python3-pil cython3
 
-*Install rpi-rgb-led-matrix*
-- clone it from https://github.com/hzeller/rpi-rgb-led-matrix.git
-- cd rpi-rgb-led-matrix ; run make
-- cd bindings/python and sudo make install
+*~~Install rpi-rgb-led-matrix~~*
+- ~~clone it from~~ https://github.com/hzeller/rpi-rgb-led-matrix.git
+- ~~cd rpi-rgb-led-matrix ; run make~~
+- ~~cd bindings/python and sudo make install~~
 
 *Clone the repo*
 - clone repositiory someplace 'suitable'
@@ -45,6 +46,7 @@ Via SSE stream, matrixclient responds to the following commands:
 - python3 -m venv venv
 - source venv/bin/activate
 - pip install -r requirements.txt
+- pip install git+https://github.com/hzeller/rpi-rgb-led-matrix
 
 *Setup the execution environment*
 - copy sample_mc.sh mc.sh and edit 'DIR' for your current directory
@@ -62,5 +64,4 @@ Via SSE stream, matrixclient responds to the following commands:
 - after successfully testing via mc.sh
 - copy sample_matrix.service matrix.service and edit ExecStart to point to full path of mc.sh
 - copy matrix.service to /etc/systemd/system
-- sudo systemctl enable matrix
-- sudo systemctl start matrix
+- sudo systemctl enable matrix --now
